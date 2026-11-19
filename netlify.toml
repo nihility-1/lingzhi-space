@@ -6,3 +6,8 @@
   from = "/api/scores"
   to = "/.netlify/functions/scores"
   status = 200
+
+[[redirects]]
+  from = "/api/save"
+  to = "/.netlify/functions/save"
+  status = 200
