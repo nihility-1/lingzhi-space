@@ -942,14 +942,15 @@ resize(); initSkills(null); renderSkills(); intro(); requestAnimationFrame(loop)
         if(!j.id_token) throw new Error(j.error_description||j.error||'换取令牌失败');
         var p=JSON.parse(b64d(j.id_token.split('.')[1]));
         var u={sub:p.sub,name:p.name||p.nickname||p.preferred_username||p.sub};
-        localStorage.setItem('wd_user',JSON.stringify(u));
+        localStorage.setItem('wd_user',JSON.stringify(u));
+        try{localStorage.setItem('wd_at',j.access_token||'');}catch(e){}
         sessionStorage.removeItem('pkce'); paint(); hint('登录成功：'+u.name);
       })
       .catch(function(e){hint('登录失败：'+e.message);});
   }
   window.addEventListener('DOMContentLoaded',function(){
     var b=document.getElementById('authBtn');
-    if(b) b.onclick=function(){ if(user()){localStorage.removeItem('wd_user');paint();hint('已退出登录');} else login(); };
+    if(b) b.onclick=function(){ if(user()){localStorage.removeItem('wd_user');localStorage.removeItem('wd_at');paint();hint('已退出登录');} else login(); };
     paint(); finish();
   });
 })();
@@ -1139,5 +1140,51 @@ try{const _s=wdLoad(); if(_s.muted){SFXMuted=true; var _sb=document.getElementBy
   obs.observe(panel,{childList:true,subtree:true});
 })();
 </script>
+
+<script>
+(function(){
+  var KEY='wd_run_v1', TS='wd_run_ts', AT='wd_at';
+  function tok(){try{return localStorage.getItem(AT)||'';}catch(e){return '';}}
+  function post(b){return fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json();});}
+  var timer=null;
+  function push(){
+    var t=tok(); if(!t) return;
+    var raw,ts; try{raw=localStorage.getItem(KEY); ts=Number(localStorage.getItem(TS))||Date.now();}catch(e){return;}
+    if(!raw) return;
+    var run; try{run=JSON.parse(raw);}catch(e){return;}
+    run.ts=ts;
+    clearTimeout(timer);
+    timer=setTimeout(function(){ post({op:'save',token:t,run:run}).catch(function(){}); },1600);
+  }
+  var _set=Storage.prototype.setItem, _get=Storage.prototype.getItem;
+  Storage.prototype.setItem=function(k,v){
+    _set.apply(this,arguments);
+    if(k===KEY){ try{_set.call(this,TS,String(Date.now()));}catch(e){} push(); }
+  };
+  function pull(){
+    var t=tok(); if(!t) return;
+    post({op:'load',token:t}).then(function(j){
+      if(!j||!j.ok||!j.run) return;
+      var rts=Number(j.run.ts)||0;
+      var lts=0,raw=null;
+      try{lts=Number(localStorage.getItem(TS))||0; raw=localStorage.getItem(KEY);}catch(e){}
+      if(rts<=lts) return;
+      try{
+        _set.call(localStorage,KEY,JSON.stringify(j.run));
+        _set.call(localStorage,TS,String(rts));
+      }catch(e){return;}
+      try{
+        if(sessionStorage.getItem('wd_cloud_done')!=='1'){
+          sessionStorage.setItem('wd_cloud_done','1');
+          location.reload();
+        }
+      }catch(e){}
+    }).catch(function(){});
+  }
+  window.addEventListener('DOMContentLoaded',function(){ setTimeout(pull,700); });
+  window.wdCloud={push:push,pull:pull};
+})();
+</script>
+
 </body>
 </html>
