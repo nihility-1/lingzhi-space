@@ -1,1083 +1,1143 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>灵质空间 · 六大系</title>
-<style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:#efe9dc;color:#2b241c;font-family:"Microsoft YaHei",system-ui,sans-serif;overflow:hidden}
-#app{position:relative;width:100%;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:#f7f2e7}
-#top{padding:8px 12px 4px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:#7a6a55}
-.bar{height:9px;border-radius:5px;background:#1f2933;overflow:hidden}
-.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#39d98a,#7ef0b2);transition:width .15s}
-.bar.foe i{background:linear-gradient(90deg,#ff6b6b,#ffb199)}
-.row{display:flex;justify-content:space-between;align-items:center}
-#stage{flex:1;min-height:0;width:100%;display:block;touch-action:none}
-.lab{padding:2px 14px 0;font-size:10px;color:#7d8b99;letter-spacing:1px}
-#skills{display:flex;gap:6px;padding:4px 10px 2px}
-.sk{flex:1;min-width:0;position:relative;border:1px solid #d8cbb2;border-radius:10px;background:#f2ead9;padding:7px 4px 5px;text-align:center;font-size:11px;color:#2b241c;overflow:hidden;user-select:none}
-.sk .nm{font-size:12px;font-weight:600}
-.sk .mo{font-size:10px;color:#8a7a63;margin-top:2px;height:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.sk .cd{position:absolute;inset:0;background:rgba(6,10,14,.72);transform-origin:bottom;pointer-events:none}
-.sk.pick{outline:2px solid #39d98a;animation:pulse 1s infinite}
-@keyframes pulse{50%{outline-color:#7ef0b2}}
-#overlay{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;background:rgba(60,50,35,.35);padding:14px;z-index:9;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.panel{width:100%;max-width:420px;margin:auto;background:#fbf6ea;border:1px solid #d8cbb2;border-radius:14px;padding:16px;color:#2b241c;max-height:88vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
-.panel h1{margin:0 0 6px;font-size:22px;letter-spacing:2px}
-.panel p{margin:6px 0;font-size:13px;line-height:1.6;color:#7a6a56}
-.btn{margin-top:14px;width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#39d98a,#2bb3ff);color:#04121c;font-size:15px;font-weight:700;letter-spacing:1px}
-.cards{display:flex;flex-direction:column;gap:9px;margin-top:10px;max-height:48vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding-right:4px}
-.card{border:1px solid #d8cbb2;border-radius:10px;padding:9px 12px;background:#f2ead9;font-size:13px;color:#2b241c}
-.card b{color:#3f5d4a}
-.card span{display:block;color:#7a6a55;font-size:12px;margin-top:4px}
-#hint{position:absolute;left:0;right:0;bottom:196px;text-align:center;font-size:12px;color:#39d98a;pointer-events:none;opacity:0;transition:opacity .2s}
-#hint.on{opacity:1}
-#statBtn{margin-left:auto;font-size:11px;color:#4a5a6a;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer}#authBtn{font-size:11px;color:#8a6a2f;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer;margin-left:6px}
-#rankBtn{font-size:11px;color:#8a6a2f;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer;margin-left:6px}
-#soundBtn{margin-left:auto;font-size:11px;color:#4d6b57;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer}
-
-#stage{position:relative;z-index:1}
-#paperfx{position:absolute;inset:0;z-index:2;pointer-events:none;background:
- radial-gradient(120% 90% at 50% 0%,rgba(255,255,255,.18),rgba(120,96,58,.16) 70%,rgba(80,62,36,.26) 100%),
- repeating-linear-gradient(0deg,rgba(120,96,58,.045) 0 1px,transparent 1px 3px),
- repeating-linear-gradient(90deg,rgba(120,96,58,.035) 0 1px,transparent 1px 4px)}
-.bar.qi{height:6px;margin-top:2px}
-.bar.qi i{background:linear-gradient(90deg,#6b7f9e,#a9c0d8);width:0}
-#comboTxt{font-size:12px;color:#c25e2a;letter-spacing:1px}
-#domainBtn{margin-left:4px;font-size:11px;color:#f4efe4;background:#8c3a2a;border-radius:6px;padding:2px 9px;user-select:none;cursor:pointer}
-#domainBtn.off{opacity:.45}
-#waveTxt{font-family:"KaiTi","STKaiti",serif;font-size:14px;letter-spacing:2px;color:#3f3629}
-.sk{background:linear-gradient(180deg,#fbf6ec,#f1e7d2);border:1px solid #c9b791;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 6px rgba(90,70,40,.08)}
-.sk .nm{font-family:"KaiTi","STKaiti",serif;letter-spacing:1px}
-.btn{background:linear-gradient(135deg,#8c3a2a,#b5543a);color:#f7f0e2;letter-spacing:2px}
-.card{background:linear-gradient(180deg,#fcf8ee,#f3eada);border-left:3px solid #8c3a2a}
-.panel{border:1px solid #cdbb95;box-shadow:0 8px 26px rgba(70,52,28,.18)}
-.panel h1{font-family:"KaiTi","STKaiti",serif}
-#hint{color:#8c3a2a}
-</style>
-</head>
-<body>
-<div id="app">
-  <div id="top">
-    <div class="row"><span id="waveTxt">第 0 波</span><span id="comboTxt"></span><span id="hintTop"></span></div>
-    <div class="bar"><i id="hpBar"></i></div>
-    <div class="bar qi"><i id="qiBar"></i></div>
-    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="authBtn">登录</span><span id="rankBtn">排行</span></div>
-  </div>
-  <canvas id="stage"></canvas>
-  <div id="paperfx"></div>
-  <div class="lab">你</div>
-  <div id="skills"></div>
-  <div id="hint"></div>
-  <div id="overlay"><div class="panel" id="panel"></div></div>
-</div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>灵质空间 · 六大系</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#efe9dc;color:#2b241c;font-family:"Microsoft YaHei",system-ui,sans-serif;overflow:hidden}
+#app{position:relative;width:100%;max-width:520px;height:100dvh;margin:0 auto;display:flex;flex-direction:column;background:#f7f2e7}
+#top{padding:8px 12px 4px;display:flex;flex-direction:column;gap:5px;font-size:12px;color:#7a6a55}
+.bar{height:9px;border-radius:5px;background:#1f2933;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#39d98a,#7ef0b2);transition:width .15s}
+.bar.foe i{background:linear-gradient(90deg,#ff6b6b,#ffb199)}
+.row{display:flex;justify-content:space-between;align-items:center}
+#stage{flex:1;min-height:0;width:100%;display:block;touch-action:none}
+.lab{padding:2px 14px 0;font-size:10px;color:#7d8b99;letter-spacing:1px}
+#skills{display:flex;gap:6px;padding:4px 10px 2px}
+.sk{flex:1;min-width:0;position:relative;border:1px solid #d8cbb2;border-radius:10px;background:#f2ead9;padding:7px 4px 5px;text-align:center;font-size:11px;color:#2b241c;overflow:hidden;user-select:none}
+.sk .nm{font-size:12px;font-weight:600}
+.sk .mo{font-size:10px;color:#8a7a63;margin-top:2px;height:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.sk .cd{position:absolute;inset:0;background:rgba(6,10,14,.72);transform-origin:bottom;pointer-events:none}
+.sk.pick{outline:2px solid #39d98a;animation:pulse 1s infinite}
+@keyframes pulse{50%{outline-color:#7ef0b2}}
+#overlay{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;background:rgba(60,50,35,.35);padding:14px;z-index:9;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.panel{width:100%;max-width:420px;margin:auto;background:#fbf6ea;border:1px solid #d8cbb2;border-radius:14px;padding:16px;color:#2b241c;max-height:88vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.panel h1{margin:0 0 6px;font-size:22px;letter-spacing:2px}
+.panel p{margin:6px 0;font-size:13px;line-height:1.6;color:#7a6a56}
+.btn{margin-top:14px;width:100%;padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#39d98a,#2bb3ff);color:#04121c;font-size:15px;font-weight:700;letter-spacing:1px}
+.cards{display:flex;flex-direction:column;gap:9px;margin-top:10px;max-height:48vh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding-right:4px}
+.card{border:1px solid #d8cbb2;border-radius:10px;padding:9px 12px;background:#f2ead9;font-size:13px;color:#2b241c}
+.card b{color:#3f5d4a}
+.card span{display:block;color:#7a6a55;font-size:12px;margin-top:4px}
+#hint{position:absolute;left:0;right:0;bottom:196px;text-align:center;font-size:12px;color:#39d98a;pointer-events:none;opacity:0;transition:opacity .2s}
+#hint.on{opacity:1}
+#statBtn{margin-left:auto;font-size:11px;color:#4a5a6a;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer}#authBtn{font-size:11px;color:#8a6a2f;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer;margin-left:6px}
+#rankBtn{font-size:11px;color:#8a6a2f;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer;margin-left:6px}
+#soundBtn{margin-left:auto;font-size:11px;color:#4d6b57;border:1px solid #b9a884;border-radius:6px;padding:2px 8px;user-select:none;cursor:pointer}
+
+#stage{position:relative;z-index:1}
+#paperfx{position:absolute;inset:0;z-index:2;pointer-events:none;background:
+ radial-gradient(120% 90% at 50% 0%,rgba(255,255,255,.18),rgba(120,96,58,.16) 70%,rgba(80,62,36,.26) 100%),
+ repeating-linear-gradient(0deg,rgba(120,96,58,.045) 0 1px,transparent 1px 3px),
+ repeating-linear-gradient(90deg,rgba(120,96,58,.035) 0 1px,transparent 1px 4px)}
+.bar.qi{height:6px;margin-top:2px}
+.bar.qi i{background:linear-gradient(90deg,#6b7f9e,#a9c0d8);width:0}
+#comboTxt{font-size:12px;color:#c25e2a;letter-spacing:1px}
+#domainBtn{margin-left:4px;font-size:11px;color:#f4efe4;background:#8c3a2a;border-radius:6px;padding:2px 9px;user-select:none;cursor:pointer}
+#domainBtn.off{opacity:.45}
+#waveTxt{font-family:"KaiTi","STKaiti",serif;font-size:14px;letter-spacing:2px;color:#3f3629}
+.sk{background:linear-gradient(180deg,#fbf6ec,#f1e7d2);border:1px solid #c9b791;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 2px 6px rgba(90,70,40,.08)}
+.sk .nm{font-family:"KaiTi","STKaiti",serif;letter-spacing:1px}
+.btn{background:linear-gradient(135deg,#8c3a2a,#b5543a);color:#f7f0e2;letter-spacing:2px}
+.card{background:linear-gradient(180deg,#fcf8ee,#f3eada);border-left:3px solid #8c3a2a}
+.panel{border:1px solid #cdbb95;box-shadow:0 8px 26px rgba(70,52,28,.18)}
+.panel h1{font-family:"KaiTi","STKaiti",serif}
+#hint{color:#8c3a2a}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top">
+    <div class="row"><span id="waveTxt">第 0 波</span><span id="comboTxt"></span><span id="hintTop"></span></div>
+    <div class="bar"><i id="hpBar"></i></div>
+    <div class="bar qi"><i id="qiBar"></i></div>
+    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="authBtn">登录</span><span id="rankBtn">排行</span></div>
+  </div>
+  <canvas id="stage"></canvas>
+  <div id="paperfx"></div>
+  <div class="lab">你</div>
+  <div id="skills"></div>
+  <div id="hint"></div>
+  <div id="overlay"><div class="panel" id="panel"></div></div>
+</div>
+<script>
+const cvs=document.getElementById('stage'),ctx=cvs.getContext('2d');
+const skillsEl=document.getElementById('skills'),skillsoverlay=document.getElementById('overlay'),panel=document.getElementById('panel');
+const hpBar=document.getElementById('hpBar'),hpTxt=document.getElementById('hpTxt'),waveTxt=document.getElementById('waveTxt'),shieldTxt=document.getElementById('shieldTxt');
+const hintEl=document.getElementById('hint');
+document.getElementById('statBtn').onclick=openStats;
+document.getElementById('soundBtn').onclick=()=>{ SFXMuted=!SFXMuted; document.getElementById('soundBtn').textContent=SFXMuted?'静音':'音效'; if(!SFXMuted) actx(); };
+document.getElementById('restartBtn').onclick=openRestart;
+function openRestart(){
+  const was=S.paused; S.paused=true;
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>重开一局？</h1><p>当前这一局的波数、词条都不留。</p>'
+   +'<button class="btn" id="keepGo" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">接着打</button>'
+   +'<button class="btn" id="doRestart" style="background:#c9603c;color:#fff">重开</button>'
+   +'<button class="btn" id="doQuit" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">退出</button>';
+  document.getElementById('keepGo').onclick=()=>{ overlay.style.display='none'; S.paused=was; };
+  document.getElementById('doRestart').onclick=()=>location.reload();
+  document.getElementById('doQuit').onclick=()=>{ overlay.innerHTML='<div class="panel"><h1>这一局到这儿</h1><p>可以关掉这个页面了。</p></div>'; try{ window.close(); }catch(e){} };
+}
+
+const BASE=[
+ {id:'blade',name:'金刃·断岳',elem:'金',lane:'御灵',dmg:9,cd:1.1,color:'#b9a25e',kind:'single',note:'对厚甲与首领伤害 +40%'},
+ {id:'fire',name:'炎爆·焚山',elem:'火',lane:'御灵',dmg:24,cd:1.9,color:'#c9603c',kind:'single',note:'命中处炸开，附近敌人吃五成',splashF:0.5},
+ {id:'tide',name:'寒潮·凝渊',elem:'水',lane:'御灵',dmg:19,cd:1.6,color:'#5f93a6',kind:'single',onHit:[{k:'slow',f:0.4,dur:2}],freezeChance:0.18,note:'减速，有一成八的机会冻住一秒'},
+ {id:'rock',name:'落石·压顶',elem:'土',lane:'御灵',dmg:30,cd:2.4,color:'#9a7f5c',kind:'aoe',onHit:[{k:'knock'}],note:'范围砸落，把敌人往后推'},
+ {id:'seal',name:'制灵·封',elem:'无',lane:'锁御',dmg:14,cd:1.8,color:'#7c7396',kind:'aoe',onHit:[{k:'weak',f:0.7,dur:3},{k:'stun',dur:0.8}],note:'镇住一片，敌伤降三成并定身'},
+ {id:'paint',name:'画虎·召灵',elem:'无',lane:'造物',dmg:16,cd:5.0,color:'#b07a45',kind:'summon',note:'画一只虎灵替你打六秒'},
+ {id:'trace',name:'追毫·锁迹',elem:'无',lane:'生灵',dmg:13,cd:2.1,color:'#b78a90',kind:'single',onHit:[{k:'mark',dur:6}],note:'留下灵痕，被打时额外受伤'},
+ {id:'cleanse',name:'清洗·归心',elem:'无',lane:'心灵',dmg:22,cd:4.5,color:'#a98cba',kind:'heal',note:'洗去一身尘，回血；溢出转盾'},
+ {id:'realm',name:'灵域·陷',elem:'空间',lane:'空间',dmg:7,cd:1.8,color:'#8878ad',kind:'aoe',onHit:[{k:'slow',f:0.3,dur:2}],note:'铺开灵域，里面的人举步慢'},
+ {id:'drain',name:'锁御·卸',elem:'无',lane:'锁御',dmg:18,cd:2.6,color:'#7c7396',kind:'single',onHit:[{k:'weak',f:0.55,dur:6}],note:'卸去敌势，六秒内它打你轻一半'},
+ {id:'bewitch',name:'心灵·惑',elem:'心灵',lane:'心灵',dmg:8,cd:3.4,color:'#a98cba',kind:'aoe',onHit:[{k:'stun',dur:1.2}],note:'惑住一片，定身一秒多'},
+ {id:'ward',name:'锁御·护身',elem:'无',lane:'锁御',dmg:6,cd:4.5,color:'#7c7396',kind:'buff',note:'给自己二十五点护盾，三秒内受伤少三成'},
+ {id:'charm',name:'心灵·摄魂',elem:'无',lane:'心灵',dmg:10,cd:5.0,color:'#a98cba',kind:'single',onHit:[{k:'charm',dur:2.5}],note:'摄住一只，让它往回走两秒半'},
+ {id:'echo',name:'空间·回响',elem:'空间',lane:'空间',dmg:12,cd:3.2,color:'#8878ad',kind:'single',onHit:[{k:'echo',dur:1.2,mul:0.6}],note:'一秒二后再响一次，六成伤害'},
+ {id:'thunder',name:'御灵·雷',elem:'金',lane:'御灵',dmg:18,cd:2.0,color:'#c9b06a',kind:'single',onHit:[{k:'chain'}],note:'劈中后跳到最近的一只'},
+ {id:'thorn',name:'御灵·毒藤',elem:'木',lane:'御灵',dmg:8,cd:1.6,color:'#5f8f5a',kind:'single',onHit:[{k:'poison',dps:4,dur:4}],note:'伤害轻，专留毒，毒可叠'},
+ {id:'bind',name:'锁御·缚',elem:'无',lane:'锁御',dmg:9,cd:4.0,color:'#7c7396',kind:'aoe',onHit:[{k:'stun',dur:1.6},{k:'slow',f:0.45,dur:3}],note:'缚住一片，定身一秒六'},
+ {id:'raven',name:'造物·鸦',elem:'无',lane:'造物',dmg:13,cd:4.2,color:'#b07a45',kind:'summon',note:'画一只灵鸦，替你啄六秒'},
+ {id:'quake',name:'生灵·震魂',elem:'无',lane:'生灵',dmg:18,cd:2.8,color:'#5f8f5a',kind:'aoe',onHit:[{k:'mark',dur:5}],note:'震魂一片，留下灵痕'},
+ {id:'rift',name:'空间·裂',elem:'空间',lane:'空间',dmg:34,cd:3.6,color:'#8878ad',kind:'single',onHit:[{k:'weak',f:0.8,dur:2.5}],note:'撕开一道裂隙，单体重击'},
+];
+
+const MODS=[
+ {id:'dmg50',name:'御灵·锋',desc:'这个技能伤害 +50%',tag:'伤害+50%'},
+ {id:'speed30',name:'御灵·疾',desc:'冷却缩短三成',tag:'攻速+30%'},
+ {id:'pierce',name:'御灵·散',desc:'额外命中一个目标',tag:'目标+1'},
+ {id:'burn',name:'灼灵',desc:'命中后每秒烧 3 点，持续 3 秒',tag:'灼烧3/s'},
+ {id:'freeze',name:'寒缚',desc:'命中后减速四成，两秒',tag:'减速40%'},
+ {id:'chain',name:'灵链',desc:'命中后跳到最近目标，五成伤害',tag:'连锁50%'},
+ {id:'lifesteal',name:'噬灵',desc:'回复伤害的两成',tag:'吸血20%'},
+ {id:'crit',name:'洞察',desc:'暴击率 +30%',tag:'暴击+30%'},
+ {id:'critdmg',name:'致命',desc:'暴击伤害提高到 2.5 倍',tag:'爆伤2.5x'},
+ {id:'cull',name:'斩杀',desc:'目标两成半血以下时伤害 +80%',tag:'残血增伤'},
+ {id:'shielddmg',name:'借势',desc:'身上有护盾时伤害 +20%',tag:'护盾增伤'},
+ {id:'rage',name:'狂怒',desc:'每损失一成血，伤害 +5%',tag:'越残越狠'},
+ {id:'deepPoison',name:'深毒',desc:'中毒可叠到六层',tag:'毒叠6层'},
+ {id:'killheal',name:'嗜血',desc:'每次击杀回 7 点血',tag:'击杀回血7'},
+ {id:'knock',name:'冲击',desc:'命中把敌人推开一段',tag:'击退'},
+ {id:'poison',name:'淬毒',desc:'每秒 2 点，持续 4 秒，可叠三层',tag:'中毒2/s'},
+ {id:'slowp',name:'迟滞',desc:'减速再叠一成五，持续两秒',tag:'减速+15%'},
+ {id:'stunp',name:'定神',desc:'定身再叠零点四秒',tag:'定身+0.4s'},
+ {id:'markp',name:'寻踪',desc:'灵痕再续两秒，并多吃一成五',tag:'灵痕+2s'},
+ {id:'shield',name:'灵气罩',desc:'每次命中给自己 2 点护盾，上限 30',tag:'护盾+2'},
+ {id:'cdr',name:'冥想',desc:'冷却再降两成',tag:'冷却-20%'},
+ {id:'execute',name:'处决',desc:'目标三成血以下时伤害翻倍',tag:'处决x2'},
+ {id:'bounce',name:'弹射',desc:'多打一个目标，四成伤害',tag:'弹射40%'},
+ {id:'splash',name:'溅射',desc:'命中点周围也吃五成伤害',tag:'溅射50%'},
+ {id:'ramp',name:'蓄势',desc:'每过一波，伤害 +8%',tag:'每波+8%'},
+ {id:'multihit',name:'连击',desc:'同一次施法再打一下，六成伤害',tag:'连击60%'},
+ {id:'slowdmg',name:'趁滞',desc:'对减速目标伤害 +40%',tag:'减速增伤'},
+ {id:'highhp',name:'斩满',desc:'目标八成血以上时 +50%',tag:'满血增伤'},
+ {id:'bosslayer',name:'屠首',desc:'对首领伤害 +40%',tag:'对首领+40%'},
+ {id:'armorpen',name:'破甲',desc:'对硬目标（坦克、首领）+50%',tag:'破甲+50%'},
+ {id:'chain2',name:'连锁+1',desc:'连锁多跳一个目标',tag:'连锁+1'},
+ {id:'splashup',name:'溅射强化',desc:'溅射范围和伤害再提五成',tag:'溅射强化'},
+ {id:'burnspread',name:'燎原',desc:'灼烧会传给周围敌人',tag:'灼烧扩散'},
+ {id:'freezechance',name:'冰封',desc:'命中两成概率冻住一秒',tag:'冰封20%'},
+ {id:'modbonus',name:'灵质压榨',desc:'这个技能每装一条词条，伤害 +6%',tag:'词条+6%'},
+ {id:'healwave',name:'回春',desc:'每清一波回 12 点血',tag:'每波回血12'},
+ {id:'critheal',name:'血偿',desc:'每次暴击回 4 点血',tag:'暴击回血4'},
+ {id:'shieldstart',name:'结盾',desc:'每波开始给 8 点护盾',tag:'每波盾8'},
+ {id:'frenzy',name:'狂怒击',desc:'击杀后所有技能冷却减 0.5 秒',tag:'击杀加速'},
+ {id:'hp30',name:'壮体',desc:'生命上限 +30，立刻生效',tag:'生命+30'},
+ {id:'pierce2',name:'贯穿',desc:'额外命中两个目标',tag:'目标+2'},
+ {id:'wuxing',name:'克伐',desc:'五行克制时伤害再 +50%',tag:'克制+50%'},
+ {id:'sameelem',name:'同源',desc:'对同属性目标伤害 +50%',tag:'同源+50%'},
+ {id:'lane_firm',name:'锁御·固',desc:'每波开始获得 6 点护盾',tag:'护盾+6/波'},
+ {id:'lane_bind',name:'锁御·缚',desc:'制灵的削弱与减速延长 1 秒',tag:'控制+1s'},
+ {id:'craft_power',name:'造物·灵',desc:'虎灵伤害 +50%',tag:'召唤+50%'},
+ {id:'craft_twin',name:'造物·双',desc:'虎灵同时多一只',tag:'召唤+1'},
+ {id:'life_mark',name:'生灵·痕',desc:'追毫标记延长 3 秒',tag:'标记+3s'},
+ {id:'life_hunt',name:'生灵·猎',desc:'对标记目标伤害 +40%',tag:'猎杀+40%'},
+ {id:'mind_clean',name:'心灵·净',desc:'清洗溢出的治疗转成护盾',tag:'治疗转盾'},
+ {id:'space_drain',name:'空间·吸',desc:'击杀回复 3 点生命',tag:'击杀回血'},
+ {id:'elem_jia',name:'御灵·甲',desc:'木系技能伤害 +30%',tag:'木+30%'},
+ {id:'elem_bing',name:'御灵·丙',desc:'火系技能伤害 +30%',tag:'火+30%'},
+ {id:'elem_wu',name:'御灵·戊',desc:'土系技能伤害 +30%',tag:'土+30%'},
+ {id:'elem_geng',name:'御灵·庚',desc:'金系技能伤害 +30%',tag:'金+30%'},
+ {id:'elem_ren',name:'御灵·壬',desc:'水系技能伤害 +30%',tag:'水+30%'},
+ {id:'space_veil',name:'空间·隐',desc:'受到的伤害降低 10%',tag:'减伤10%'} ,{id:'lane_urn',name:'锁御·瓮',desc:'每波开始额外获得 10 点护盾',tag:'护盾+10/波'}
+ ,{id:'craft_pack',name:'造物·群',desc:'虎灵再多两只',tag:'召唤+2'}
+ ,{id:'life_scent',name:'生灵·嗅',desc:'对被标记目标再 +30% 伤害',tag:'标记+30%'}
+ ,{id:'mind_calm',name:'心灵·静',desc:'清洗的治疗量 +40%',tag:'治疗+40%'}
+ ,{id:'space_edge',name:'空间·界',desc:'受到的伤害再降 5%',tag:'减伤+5%'}
+ ,{id:'elem_all',name:'御灵·均',desc:'所有属性伤害 +10%',tag:'全属性+10%'}
+ ,{id:'cdfast',name:'御灵·速',desc:'冷却再短一成二',tag:'冷却-12%'}
+ ,{id:'critup',name:'灵动',desc:'暴击率再 +12%',tag:'暴击+12%'}
+ ,{id:'dmg35',name:'御灵·重',desc:'伤害 +35%',tag:'伤害+35%'}
+ ,{id:'ctrlplus',name:'锁御·滞',desc:'减速与定身多撑 0.6 秒',tag:'控制+0.6s'}
+ ,{id:'guardplus',name:'锁御·壁',desc:'每波多 6 点护盾',tag:'护盾/波+6'}
+ ,{id:'healplus',name:'心灵·润',desc:'每波回复 +18',tag:'回血/波+18'}
+
+ ,{id:'dmg25',name:'御灵·锐',desc:'这个技能伤害再 +25%',tag:'伤害+25%'}
+ ,{id:'cd20',name:'御灵·息',desc:'冷却缩短两成',tag:'冷却-20%'}
+ ,{id:'pierce3',name:'御灵·漫',desc:'额外命中三个目标',tag:'目标+3'}
+ ,{id:'splashup',name:'燎原',desc:'溅射伤害再提两成五',tag:'溅射+25%'}
+ ,{id:'ctrlmore',name:'镇魂',desc:'控制时长再 +0.8 秒',tag:'控制+0.8s'}
+ ,{id:'guardmore',name:'锁御·垒',desc:'每波开场多 8 点护盾',tag:'护盾+8/波'}
+ ,{id:'elemall',name:'五行·兼',desc:'对所有属性都多两成伤害',tag:'全属性+20%'}
+ ,{id:'healup',name:'心灵·润',desc:'回血量 +50%',tag:'回血+50%'}
+];
+const LIMIT_MODS=[
+ {id:'m_backwater',name:'限定·背水',desc:'生命低于三成时伤害 +50%',tag:'残血增伤'},
+ {id:'m_dawn',name:'限定·初升',desc:'满血时伤害 +40%',tag:'满血增伤'},
+ {id:'m_fewskill',name:'限定·孤注',desc:'只带一门技能时伤害 +30%',tag:'单技能增伤'},
+ {id:'m_latewave',name:'限定·破局',desc:'十五波之后伤害 +35%',tag:'后期增伤'},
+ {id:'m_bosswave',name:'限定·屠首',desc:'首领波伤害 +60%',tag:'首领波增伤'},
+ {id:'m_summoner',name:'限定·众行',desc:'每只召唤物给你 +6% 伤害，最多 +30%',tag:'召唤增伤'}
+];
+MODS.push(...LIMIT_MODS);
+
+
+const TYPES={
+ slime:{r:15,hp:50,sp:26,color:'#c2a07a',dmg:10,elem:'土'},
+ runner:{r:11,hp:34,sp:62,color:'#7ce37c',dmg:8,elem:'木'},
+ tank:{r:24,hp:420,sp:11,color:'#e6d68a',dmg:20,elem:'金'},
+ split:{r:18,hp:150,sp:24,color:'#8ff0e0',dmg:12,elem:'水'},
+ healer:{r:16,hp:180,sp:18,color:'#7ce37c',dmg:8,elem:'木'},
+ boss:{r:30,hp:820,sp:12,color:'#ff7a7a',dmg:26,elem:'火'}
+};
+const KE={金:'木',木:'土',土:'水',水:'火',火:'金'};
+const EC={金:'#e6d68a',木:'#7ce37c',水:'#8ff0e0',火:'#ff8a5c',土:'#c2a07a',空间:'#c9a5ff',心灵:'#f5b8ff'};
+function elemMul(a,d){ if(!a||!d) return 1; if(a===d) return 1; if(KE[a]===d) return 1.5; if(KE[d]===a) return 0.75; return 1; }
+
+
+function waveComp(n){
+  const g=[];
+  g.push({t:'slime', n:Math.min(13, 2+Math.floor(n*0.55))});
+  if(n>=4) g.push({t:'runner', n:Math.min(8, 1+Math.floor(n*0.55))});
+  if(n>=5) g.push({t:'tank', n:Math.min(4, Math.floor(n/3))});
+  if(n>=6) g.push({t:'split', n:Math.min(4, Math.floor(n/3))});
+  if(n>=8) g.push({t:'healer', n:Math.min(2, Math.floor(n/5))});
+  if(n>=8 && n%5===0) g.push({t:'boss', n:Math.min(2, 1+Math.floor(n/12))});
+  return g;
+}
+const AFFIX={
+ yuling:{name:'御灵·焚',color:'#c9603c'},
+ suoyu:{name:'锁御·固',color:'#7c7396'},
+ zaowu:{name:'造物·衍',color:'#b07a45'},
+ shengling:{name:'生灵·愈',color:'#5f8f5a'},
+ xinling:{name:'心灵·惑',color:'#a98cba'},
+ kongjian:{name:'空间·跃',color:'#8878ad'}
+};
+const SCALE={hp:1.32,dmg:0.06,spd:0.013};
+
+const S={fearT:0,hp:150,maxhp:150,shield:0,wave:0,skills:[],enemies:[],bolts:[],texts:[],summons:[],rings:[],parts:[],shake:0,stats:{kills:0,dmg:0,heal:0},
+ running:false,drafting:false,draftsLeft:0,pending:null,t:0,over:false};
+
+
+/* ---- 音效：WebAudio 现场合成，不依赖外部文件 ---- */
+let AC=null,MG=null,SFXMuted=false,lastHitAt=0;
+function actx(){
+  try{
+    if(!AC){ const C=window.AudioContext||window.webkitAudioContext; if(!C) return null; AC=new C(); MG=AC.createGain(); MG.gain.value=0.26; MG.connect(AC.destination); }
+    if(AC.state==='suspended') AC.resume();
+    return AC;
+  }catch(e){ return null; }
+}
+function tone(f,dur,type,vol,f2,delay){
+  if(SFXMuted) return; const c=actx(); if(!c) return;
+  const t0=c.currentTime+(delay||0);
+  const o=c.createOscillator(), g=c.createGain();
+  o.type=type||'sine'; o.frequency.setValueAtTime(f,t0);
+  if(f2) o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t0+dur);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(vol||0.2,t0+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g); g.connect(MG); o.start(t0); o.stop(t0+dur+0.03);
+}
+function nz(dur,vol,freq,q,delay){
+  if(SFXMuted) return; const c=actx(); if(!c) return;
+  const n=Math.max(1,Math.floor(c.sampleRate*dur)); const b=c.createBuffer(1,n,c.sampleRate); const d=b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
+  const src=c.createBufferSource(); src.buffer=b;
+  const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=freq||1200; f.Q.value=q||1;
+  const g=c.createGain(); g.gain.value=vol||0.2;
+  src.connect(f); f.connect(g); g.connect(MG);
+  src.start(c.currentTime+(delay||0));
+}
+const SFX={
+  gold(){ tone(940,0.09,'square',0.16,520); nz(0.06,0.12,2600,1.4); },
+  fire(){ nz(0.24,0.3,700,0.7); tone(190,0.22,'sawtooth',0.14,90); },
+  wood(){ tone(520,0.14,'sine',0.16,700); },
+  water(){ tone(660,0.18,'sine',0.15,320); },
+  earth(){ tone(170,0.22,'triangle',0.26,80); nz(0.12,0.18,320,1); },
+  mind(){ tone(880,0.18,'sine',0.13); tone(1320,0.22,'sine',0.09,null,0.06); },
+  space(){ tone(1250,0.16,'square',0.1,300); },
+  lock(){ nz(0.1,0.16,1800,1.5); tone(300,0.14,'triangle',0.12,150); },
+  make(){ tone(420,0.12,'triangle',0.13,560); },
+  beast(){ tone(220,0.18,'sawtooth',0.11,140); },
+  hit(){ const n=performance.now(); if(n-lastHitAt<45) return; lastHitAt=n; nz(0.05,0.09,1500,1); },
+  kill(){ tone(130,0.14,'triangle',0.24,60); nz(0.12,0.14,500,0.9); },
+  heal(){ tone(660,0.16,'sine',0.13); tone(990,0.22,'sine',0.09,null,0.05); },
+  buff(){ tone(520,0.12,'sine',0.11,780); },
+  tick(){ tone(1180,0.05,'square',0.07); },
+  over(){ tone(240,0.6,'sawtooth',0.18,80); },
+  wave(){ tone(440,0.1,'sine',0.11); tone(660,0.12,'sine',0.09,null,0.08); }
+};
+const ECOL={金:'#c9a227',火:'#c9603c',木:'#5f8f5a',水:'#4a7f9c',土:'#a9743f',心灵:'#a98cba',空间:'#8878ad'};
+function sfxCast(elem){
+  const m={金:'gold',火:'fire',木:'wood',水:'water',土:'earth',心灵:'mind',空间:'space'};
+  const k=elem&&m[elem]; if(k&&SFX[k]) SFX[k]();
+}
+
+function rnd(a,b){return a+Math.random()*(b-a)}
+function playerY(){return cvs.clientHeight/2}
+
+function initSkills(playerBase){
+  S.skills=[]; S.locked=[];
+  if(!playerBase) return;
+  S.skills.push({base:playerBase,mods:[],cd:0,stats:null});
+  S.locked=BASE.filter(b=>b.id!==playerBase.id).slice();
+  S.skills.forEach(recalc);
+}
+
+function addSkillBase(b){
+  const sk={base:b,mods:[],cd:0,stats:null}; recalc(sk); S.skills.push(sk); renderSkills();
+  hud('解锁新技能：'+b.name);
+}
+function unlockSkill(){
+  if(S.skills.length>=3 || !S.locked.length) return;
+  const pool=S.locked.slice(), picks=[];
+  for(let i=0;i<2&&pool.length;i++) picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  if(picks.length===1){ const b=picks[0]; S.locked=S.locked.filter(x=>x.id!==b.id); addSkillBase(b); return; }
+  S.paused=true;
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>多一门</h1><p>最多带三门，从这两门里挑一个。</p><div class="cards" id="pickCards"></div>';
+  const box=panel.querySelector('#pickCards');
+  picks.forEach(b=>{
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML='<b style="color:'+b.color+'">'+b.name+'</b> <b>'+b.dmg+' 伤害</b><span>'+(b.lane?b.lane+'系 · ':'')+'冷却 '+b.cd+' 秒'+(b.kind==='aoe'?'，范围伤害':'')+'</span>'+(b.note?'<span style="color:#8a6a4a">'+b.note+'</span>':'');
+    el.onclick=()=>{ S.locked=S.locked.filter(x=>x.id!==b.id); addSkillBase(b); overlay.style.display='none'; S.paused=false; };
+    box.appendChild(el);
+  });
+}
+
+function mergeHits(hits){
+  const out=[];
+  for(const h of hits){
+    const c=out.find(o=>o.k===h.k);
+    if(!c){ out.push(Object.assign({},h)); continue; }
+    if(h.k==='slow'){ c.f=Math.min(0.85,(c.f||0)+(h.f||0)); c.dur=Math.max(c.dur||0,h.dur||0); }
+    else if(h.k==='stun'){ c.dur=Math.min(2.5,(c.dur||0)+(h.dur||0)); }
+    else if(h.k==='mark'){ c.dur=(c.dur||0)+(h.dur||0); }
+    else if(h.k==='poison'||h.k==='burn'){ c.dps=(c.dps||0)+(h.dps||0); c.dur=Math.max(c.dur||0,h.dur||0); }
+    else if(h.k==='weak'){ c.f=Math.min(c.f??1,h.f??1); c.dur=Math.max(c.dur||0,h.dur||0); }
+  }
+  return out;
+}
+function recalc(sk){
+  const b=sk.base;
+  let st={dmg:b.dmg,cd:b.cd,targets:1,crit:0.08,critMult:1.6,onHit:(b.onHit||[]).slice(),heal:0,guardPerWave:0,ctrlDur:0,summonDmg:0,summonCount:0,markDur:0,markBonus:0,healShield:false,killHeal:0,dmgTaken:0,elemBonus:{},healBonus:0,elemAll:0,killHeal:0,rampPerWave:0.03,execute:false,
+          multihit:0,slowDmg:0,highhp:0,bosslayer:0,armorpen:0,chainN:0,splashF:b.kind==='aoe'?0.5:0,
+          burnSpread:false,freezeChance:0,modBonus:0,healWave:0,critHeal:0,shieldStart:0,frenzy:false,dmgBonus:0,cull:false,shielddmg:false,rage:false,deepPoison:false,wuxing:false,sameelem:false,knockBonus:0};
+  if(b.kind==='aoe') st.targets=3;
+  if(b.execute) st.execute=true;
+  for(const m of sk.mods){
+    st.modBonus+=0.06;
+    switch(m.id){
+      case 'cull': st.cull=true;break;
+       case 'shielddmg': st.shielddmg=true;break;
+       case 'rage': st.rage=true;break;
+       case 'deepPoison': st.deepPoison=true;break;
+       case 'dmg50': st.dmgBonus+=0.5;break; case 'dmg25': st.dmgBonus+=0.25;break; case 'cd20': st.cd*=0.8;break; case 'pierce3': st.targets+=3;break; case 'splashup': st.splashF=(st.splashF||0)+0.25;break; case 'ctrlmore': st.ctrlDur+=0.8;break; case 'guardmore': st.guardPerWave+=8;break; case 'elemall': st.elemAll+=0.2;break; case 'healup': st.healBonus+=0.5;break;
+      case 'speed30': st.cd*=0.7;break;
+      case 'pierce': st.targets+=1;break;
+      case 'pierce2': st.targets+=2;break;
+      case 'burn': st.onHit.push({k:'burn',dps:3,dur:3});break;
+      case 'freeze': st.onHit.push({k:'slow',f:0.4,dur:2});break;
+      case 'chain': st.onHit.push({k:'chain',f:0.5});break;
+      case 'chain2': st.chainN+=1;break;
+      case 'lifesteal': st.heal+=0.2;break;
+      case 'crit': st.crit+=0.3;break;
+      case 'critdmg': st.critMult=2.5;break;
+      case 'killheal': st.killHeal+=7;break;
+      case 'knock': if(st.onHit.some(h=>h.k==='knock')) st.knockBonus+=14; else st.onHit.push({k:'knock'});break;
+      case 'poison': st.onHit.push({k:'poison',dps:2,dur:4});break;
+      case 'slowp': st.onHit.push({k:'slow',f:0.15,dur:2});break;
+      case 'stunp': st.onHit.push({k:'stun',dur:0.4});break;
+      case 'markp': st.onHit.push({k:'mark',dur:2}); st.markBonus+=0.15; break;
+      case 'shield': st.shieldOnHit=(st.shieldOnHit||0)+2;break;
+      case 'cdr': st.cd*=0.8;break;
+      case 'cdfast': st.cd*=0.88;break;
+      case 'critup': st.crit+=0.12;break;
+      case 'dmg35': st.dmgBonus+=0.35;break;
+      case 'ctrlplus': st.ctrlDur+=0.6;break;
+      case 'guardplus': st.guardPerWave+=6;break;
+      case 'healplus': st.healWave+=18;break;
+      case 'execute': st.execute=true;break;
+      case 'bounce': st.targets+=1;st.bounceF=0.4;break;
+      case 'splash': st.splashF=Math.max(st.splashF,0.5);break;
+      case 'splashup': st.splashF=(st.splashF||0.3)*1.5;break;
+      case 'ramp': st.rampPerWave+=0.08;break;
+      case 'multihit': st.multihit=0.6;break;
+      case 'slowdmg': st.slowDmg+=0.4;break;
+      case 'highhp': st.highhp+=0.5;break;
+      case 'bosslayer': st.bosslayer+=0.4;break;
+      case 'armorpen': st.armorpen+=0.5;break;
+      case 'burnspread': st.burnSpread=true;break;
+      case 'freezechance': st.freezeChance+=0.2;break;
+      case 'healwave': st.healWave+=12;break;
+      case 'critheal': st.critHeal+=4;break;
+      case 'shieldstart': st.shieldStart+=8;break;
+      case 'frenzy': st.frenzy=true;break;
+      case 'hp30': st.hp30=true;break;
+      case 'wuxing': st.wuxing=true;break;
+      case 'sameelem': st.sameelem=true;break;
+      case 'lane_firm': st.guardPerWave+=6;break;
+      case 'lane_bind': st.ctrlDur+=1;break;
+      case 'craft_power': st.summonDmg+=0.5;break;
+      case 'craft_twin': st.summonCount+=1;break;
+      case 'life_mark': st.markDur+=3;break;
+      case 'life_hunt': st.markBonus+=0.4;break;
+      case 'mind_clean': st.healShield=true;break;
+      case 'space_drain': st.killHeal+=3;break;
+      case 'elem_jia': st.elemBonus['木']=(st.elemBonus['木']||0)+0.3;break;
+      case 'elem_bing': st.elemBonus['火']=(st.elemBonus['火']||0)+0.3;break;
+      case 'elem_wu': st.elemBonus['土']=(st.elemBonus['土']||0)+0.3;break;
+      case 'elem_geng': st.elemBonus['金']=(st.elemBonus['金']||0)+0.3;break;
+      case 'elem_ren': st.elemBonus['水']=(st.elemBonus['水']||0)+0.3;break;
+      case 'space_veil': st.dmgTaken+=0.1;break;
+      case 'lane_urn': st.guardPerWave+=10;break;
+      case 'craft_pack': st.summonCount+=2;break;
+      case 'life_scent': st.markBonus+=0.3;break;
+      case 'mind_calm': st.healBonus+=0.4;break;
+      case 'space_edge': st.dmgTaken+=0.05;break;
+      case 'elem_all': st.elemAll+=0.1;break;
+    }
+  }
+  st.dmg*=(1+st.dmgBonus);
+  st.onHit=mergeHits(st.onHit);
+  sk.stats=st;
+}
+
+function renderSkills(){
+  skillsEl.innerHTML='';
+  const mk=(list,host,side)=>{
+    list.forEach((sk,i)=>{
+      const el=document.createElement('div');
+      el.className='sk';
+      const pct=Math.min(1,sk.cd/Math.max(.01,sk.stats.cd));
+      el.innerHTML='<div class="nm" style="color:'+sk.base.color+'">'+sk.base.name+'</div>'+
+        '<div class="mo">'+(sk.mods.map(m=>m.tag).join(' ')||'无词条')+'</div>'+
+        '<div class="cd" style="transform:scaleY('+pct+')"></div>';
+      if(side===0) el.onclick=()=>onSkillClick(i);
+      host.appendChild(el);
+    });
+  };
+  mk(S.skills,skillsEl,0);
+}
+
+function hud(t){hintEl.textContent=t;hintEl.classList.add('on');clearTimeout(hud._t);hud._t=setTimeout(()=>hintEl.classList.remove('on'),1700);}
+
+function onSkillClick(i){
+  if(S.pending==null) return;
+  const mod=S.pending; S.pending=null;
+  S.skills[i].mods.push(mod);
+  if(mod.id==='hp30'){ S.maxhp+=30; S.hp+=30; }
+  recalc(S.skills[i]);
+  hud('「'+mod.name+'」装到了你的'+S.skills[i].base.name);
+  renderSkills();
+  if(S.draftsLeft>0){ S.draftsLeft--; draft(); return; }
+  overlay.style.display='none';
+  S.drafting=false;
+  S.wave++;
+  if(S.wave%3===0 && S.skills.length<3) unlockSkill();
+  waveTxt.textContent='第 '+S.wave+' 波';
+  S.enemies=[]; spawnWave(); S.running=true;
+}
+
+function kill(e){
+  if(e.dead) return;
+  e.dead=true; S.stats.kills++; SFX.kill(); S.shake=Math.max(S.shake,4); for(let i=0;i<7;i++){ S.parts.push({x:e.x,y:e.y,vx:rnd(-70,70),vy:rnd(-80,20),t:0.45,max:0.45,r:rnd(1.5,3.5)}); }
+  if(e.affix==='zaowu' && !e.child){
+    for(let i=0;i<2;i++){
+      S.enemies.push({type:'slime',x:e.x+rnd(-12,12),y:e.y+rnd(-16,16),hp:e.maxhp*0.3,maxhp:e.maxhp*0.3,sp:e.sp*1.1,r:10,dmg:e.dmg*0.7,elem:e.elem,burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0,stunT:0,affix:null,affixT:0,child:true});
+    }
+  }
+  { const kh=Math.max(0,...S.skills.map(k=>k.stats.killHeal||0)); if(kh){ S.hp=Math.min(S.maxhp,S.hp+kh); } }
+  if(e.type==='split' && !e.splitDone){
+    for(let k=0;k<2;k++){
+      const t=TYPES.slime;
+      S.enemies.push({type:'slime',x:e.x+rnd(-10,10),y:e.y+rnd(-14,14),hp:t.hp*0.5,maxhp:t.hp*0.5,sp:t.sp,r:t.r,dmg:t.dmg,elem:t.elem,burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0});
+    }
+  }
+  for(const sk of S.skills) if(sk.stats.frenzy) sk.cd=Math.max(0,sk.cd-0.5);
+}
+
+function damage(e,amt,crit){
+  if(e.dead) return;
+  if(e.affix==='suoyu') amt*=0.82;
+  e.hp-=amt; e.hit=0.12; S.stats.dmg+=amt; SFX.hit(); if(crit) S.shake=Math.max(S.shake,3);
+  S.texts.push({x:e.x,y:e.y-e.r-6,v:Math.round(amt),t:0.7,crit:!!crit});
+  if(e.hp<=0) kill(e);
+}
+
+function cast(sk,ox,oy){
+  const st=sk.stats;
+  if(sk.base.elem){ sfxCast(sk.base.elem); S.rings.push({x:typeof ox==='number'?ox:34,y:typeof oy==='number'?oy:playerY(),r:6,max:56,t:0.4,c:ECOL[sk.base.elem]||'#8a7a63'}); }
+  const ramp0=(1+S.wave*st.rampPerWave)*(1+st.modBonus*sk.mods.length);
+  if(sk.base.kind==='buff'){
+    S.shield=Math.min(60,S.shield+25); S.wardT=3; SFX.buff();
+    S.texts.push({x:34,y:playerY()-42,txt:'护身',t:0.9,color:'#8a7f9c'});
+    return;
+  }
+  if(sk.base.kind==='heal'){
+    const want=st.dmg*ramp0*(1+(st.healBonus||0)); const before=S.hp;
+    S.hp=Math.min(S.maxhp,S.hp+want);
+    const real=S.hp-before;
+    if(S.stats) S.stats.heal=(S.stats.heal||0)+real; SFX.heal();
+    if(st.healShield){ const over=want-real; if(over>0) S.shield=Math.min(60,S.shield+over); }
+    S.texts.push({x:34,y:playerY()-30,txt:'+'+Math.round(real),t:0.9,color:'#8fbf8a'});
+    return;
+  }
+  if(sk.base.kind==='summon'){
+    const n=1+st.summonCount;
+    for(let i=0;i<n;i++) S.summons.push({x:ox+16,y:oy+(i-(n-1)/2)*26,dmg:st.dmg*ramp0*(1+st.summonDmg),until:S.t+6,atk:0,r:10,color:sk.base.color});
+    S.texts.push({x:34,y:playerY()-30,txt:'虎',t:0.7,color:'#b07a45'});
+    return;
+  }
+  const alive=S.enemies.filter(e=>!e.dead).sort((a,b)=>a.x-b.x);
+  if(!alive.length) return;
+  const ramp=(1+S.wave*st.rampPerWave)*(1+st.modBonus*sk.mods.length);
+  const targets=alive.slice(0,Math.max(1,st.targets));
+  for(const t of targets){
+    let dmg=st.dmg*ramp;
+    let em=elemMul(sk.base.elem,t.elem);
+    if(st.wuxing && em>1) em*=1.5;
+    if(st.sameelem && sk.base.elem===t.elem) em*=1.5;
+    const eb=st.elemBonus[sk.base.elem]||0; if(eb) em*=1+eb; if(st.elemAll) em*=1+st.elemAll;
+    dmg*=em;
+    if(t.markT>0) dmg*=1+st.markBonus;
+    if(st.dmgTaken) {}
+    if(st.execute && t.hp/t.maxhp<0.3) dmg*=2;
+    if(st.slowDmg && t.slowT>0) dmg*=1+st.slowDmg;
+    if(st.highhp && t.hp/t.maxhp>0.8) dmg*=1+st.highhp;
+    if(st.bosslayer && t.type==='boss') dmg*=1+st.bosslayer;
+    if(st.armorpen && (t.type==='tank'||t.type==='boss')) dmg*=1+st.armorpen;
+    if(st.cull && t.hp/t.maxhp<0.25) dmg*=1.8;
+    if(st.shielddmg && S.shield>0) dmg*=1.2;
+    if(st.rage) dmg*=1+(1-S.hp/S.maxhp)*0.5;
+    if(st.backwater && S.hp/S.maxhp<0.3) dmg*=1.5;
+    if(st.dawn && S.hp>=S.maxhp) dmg*=1.4;
+    if(st.fewskill && S.skills.length<3) dmg*=1.3;
+    if(st.latewave && S.wave>=15) dmg*=1.35;
+    if(st.bosswave && S.wave%5===0) dmg*=1.6;
+    if(st.summoner) dmg*=1+Math.min(0.3,(S.summons||[]).filter(function(z){return z.until>S.t;}).length*0.06);
+    if(sk.base.breakshield && (t.shield||0)>0){ dmg+=(t.shield||0)*0.8; t.shield=(t.shield||0)*0.25; }
+    if(sk.base.detonate && ((t.poi||0)>0 || (t.burn||0)>0)) dmg*=1.6;
+    const crit=Math.random()<st.crit;
+    if(crit) dmg*=st.critMult;
+    damage(t,dmg,crit);
+    if(sk.base.drain){ S.hp=Math.min(S.maxhp,S.hp+dmg*sk.base.drain); }
+    S.bolts.push({x1:ox,y1:oy,x2:t.x,y2:t.y,life:0.16,color:sk.base.color});
+    const spf=st.splashF||sk.base.splashF||0;
+    if(spf){
+      for(const o of alive){ if(o!==t && !o.dead && Math.hypot(o.x-t.x,o.y-t.y)<(spf>0.5?100:70)) damage(o,dmg*spf,false); }
+    }
+    if(st.multihit) damage(t,dmg*st.multihit,false);
+    const fzc=st.freezeChance||sk.base.freezeChance||0;
+    if(fzc && Math.random()<fzc){ t.slowF=1; t.slowT=1; }
+    for(const h of st.onHit){
+      if(h.k==='burn'){
+        t.burn=Math.max(t.burn,h.dps); t.burnT=Math.max(t.burnT,h.dur);
+        if(st.burnSpread){ for(const o of alive){ if(o!==t && Math.hypot(o.x-t.x,o.y-t.y)<60){o.burn=Math.max(o.burn,h.dps*0.5);o.burnT=Math.max(o.burnT,h.dur);} } }
+      }
+      if(h.k==='poison'){ t.poi=Math.min(st.deepPoison?6:3,(t.poi||0)+1); t.poiT=h.dur; t.poiDps=h.dps; }
+      if(h.k==='slow'){ t.slowF=Math.max(t.slowF||0,h.f); t.slowT=Math.max(t.slowT||0,h.dur+st.ctrlDur); }
+      if(h.k==='mark'){ t.markT=Math.max(t.markT||0,h.dur+st.markDur); }
+      if(h.k==='weak'){ t.weakF=h.f; t.weakT=Math.max(t.weakT||0,h.dur+st.ctrlDur); }
+      if(h.k==='knock'){ t.x+=18+(st.knockBonus||0); }
+      if(h.k==='stun'){ t.stunT=Math.max(t.stunT||0,h.dur); }
+      if(h.k==='charm'){ t.charmT=Math.max(t.charmT||0,h.dur); }
+      if(h.k==='echo'){ t.echoT=h.dur; t.echoMul=h.mul||0.6; t.echoDmg=dmg*(h.mul||0.6); }
+      if(h.k==='chain'){
+        let jumps=1+st.chainN, cur=t;
+        for(let j=0;j<jumps;j++){
+          const c=alive.find(e=>e!==cur && !e.dead);
+          if(!c) break;
+          damage(c,dmg*h.f,false); cur=c;
+        }
+      }
+    }
+    if(st.heal) S.hp=Math.min(S.maxhp,S.hp+dmg*st.heal);
+    if(st.shieldOnHit) S.shield=Math.min(30,S.shield+st.shieldOnHit);
+    if(crit && st.critHeal) S.hp=Math.min(S.maxhp,S.hp+st.critHeal);
+    if(t.dead && st.killHeal) S.hp=Math.min(S.maxhp,S.hp+st.killHeal);
+  }
+}
+
+function spawnWave(){
+  const w=waveComp(S.wave);
+  const over=Math.max(0,S.wave-25);
+  const hpScale=Math.pow(SCALE.hp,S.wave-1)*Math.pow(1.06,over);
+  let i=0;
+  for(const g of w){
+    const t=TYPES[g.t]; const FIVE=['金','木','水','火','土'];
+    for(let k=0;k<g.n;k++){
+      S.enemies.push({type:g.t,elem:FIVE[Math.floor(Math.random()*5)],x:cvs.clientWidth*0.72+(i%4)*46+rnd(-5,5),y:rnd(55,Math.max(90,cvs.clientHeight-55)),
+        hp:t.hp*hpScale*1.05,maxhp:t.hp*hpScale*1.05,sp:t.sp*(1+Math.min(0.5,SCALE.spd*(S.wave-1))),r:t.r,
+        dmg:t.dmg*1.05*(1+SCALE.dmg*(S.wave-1))*(1+0.03*over),
+        burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0,stunT:0,affix:null,affixT:1.2});
+      i++;
+    }
+  }
+  if(S.wave>=12){
+    const list=Object.keys(AFFIX);
+    for(const e of S.enemies){
+      if(e.type==='split'||Math.random()>Math.max(0.25,0.5-0.01*over)) continue;
+      e.affix=list[Math.floor(Math.random()*list.length)];
+      if(e.affix==='suoyu'){ e.hp*=1.15; e.maxhp*=1.15; }
+    }
+  }
+  let sh=0, gd=0;
+  for(const sk of S.skills){ sh+=sk.stats.shieldStart; gd+=sk.stats.guardPerWave; }
+  if(sh) S.shield=Math.min(40,S.shield+sh);
+  if(gd) S.shield=Math.min(40,S.shield+gd);
+}
+
+let last=performance.now();
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now;
+  if(S.running && !S.drafting && !S.over) step(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function step(dt){
+  if(S.paused) return;
+  S.t+=dt;
+  if(S.shake>0){ S.shake=Math.max(0,S.shake-dt*26); cvs.style.transform=S.shake>0.2?('translate('+rnd(-S.shake,S.shake).toFixed(1)+'px,'+rnd(-S.shake,S.shake).toFixed(1)+'px)'):''; }
+  if(S.rings&&S.rings.length){ for(const r of S.rings){ r.t-=dt; r.r+=(r.max-r.r)*Math.min(1,dt*9); } S.rings=S.rings.filter(r=>r.t>0); }
+  if(S.parts&&S.parts.length){ for(const q of S.parts){ q.t-=dt; q.x+=q.vx*dt; q.y+=q.vy*dt; q.vy+=150*dt; } S.parts=S.parts.filter(q=>q.t>0); }
+  if(S.fearT>0) S.fearT-=dt;
+  if(S.wardT>0) S.wardT-=dt;
+  const py=playerY();
+  const mit=Math.max(0,...S.skills.map(k=>1-(k.stats.dmgTaken||0)))*(S.wardT>0?0.7:1);
+  for(const sk of S.skills){ sk.cd=Math.max(0,sk.cd-dt); if(sk.cd<=0){ cast(sk,34,py); sk.cd=sk.stats.cd; } }
+  for(const e of S.enemies){
+    if(e.markT>0) e.markT-=dt;
+    if(e.weakT>0) e.weakT-=dt;
+  }
+  for(const sm of S.summons){
+    if(S.t>sm.until){ sm.dead=true; continue; }
+    sm.atk-=dt;
+    if(sm.atk<=0){
+      const tgt=S.enemies.filter(e=>!e.dead).sort((a,b)=>a.x-b.x)[0];
+      if(tgt){ damage(tgt,sm.dmg,false); S.bolts.push({x1:sm.x,y1:sm.y,x2:tgt.x,y2:tgt.y,life:0.12,color:sm.color}); sm.atk=0.8; }
+    }
+  }
+  S.summons=S.summons.filter(x=>!x.dead);
+  for(const e of S.enemies){
+    if(e.dead) continue;
+    if(e.affix==='shengling') e.hp=Math.min(e.maxhp,e.hp+e.maxhp*0.012*dt);
+    if(e.affix==='kongjian'){ e.affixT-=dt; if(e.affixT<=0){ e.x-=30; e.affixT=1.8; } }
+    if(e.burnT>0){ e.burnT-=dt; e.hp-=e.burn*dt; if(e.hp<=0){kill(e);continue;} }
+    if(e.poiT>0){ e.poiT-=dt; e.hp-=e.poiDps*(e.poi||1)*dt; if(e.hp<=0){kill(e);continue;} }
+    if(e.type==='healer'){ for(const o of S.enemies){ if(o!==e && !o.dead && Math.hypot(o.x-e.x,o.y-e.y)<120) o.hp=Math.min(o.maxhp,o.hp+7*dt); } }
+    if(e.slowT>0) e.slowT-=dt;
+    if(e.echoT>0){ e.echoT-=dt; if(e.echoT<=0 && !e.dead) damage(e,e.echoDmg||0,false); }
+    if(e.charmT>0){ e.charmT-=dt; e.x+=e.sp*0.8*dt; continue; }
+    if(e.stunT>0){ e.stunT-=dt; continue; }
+    const slow=e.slowT>0?(1-e.slowF):1;
+    e.x-=e.sp*slow*dt;
+    e.hit=Math.max(0,e.hit-dt);
+    if(e.x<54){
+      const xm=(e.affix==='yuling'?1.35:1)*(1+(S.fearT>0?0.2:0));
+      S.hp-=e.dmg*xm*(e.weakT>0?e.weakF:1)*mit*dt;
+      if(e.affix==='xinling') S.fearT=3;
+      e.x=54;
+    }
+  }
+  for(const t of S.texts) t.t-=dt;
+  S.texts=S.texts.filter(t=>t.t>0);
+  for(const b of S.bolts) b.life-=dt;
+  S.bolts=S.bolts.filter(b=>b.life>0);
+  S.enemies=S.enemies.filter(e=>!e.dead);
+  if(S.shield>0) S.shield=Math.max(0,S.shield-6*dt);
+  if(S.hp<=0){ S.hp=0; gameOver(); }
+  if(S.over) return;
+  if(!S.enemies.length && !S.drafting) waveClear();
+  hpBar.style.width=(S.hp/S.maxhp*100)+'%';
+  hpTxt.textContent=Math.ceil(S.hp);
+  shieldTxt.textContent=S.shield>0?('护盾 '+Math.floor(S.shield)):'';
+  const upd=(host,list)=>{[...host.children].forEach((el,i)=>{const sk=list[i];if(!sk)return;el.querySelector('.cd').style.transform='scaleY('+Math.min(1,sk.cd/Math.max(.01,sk.stats.cd))+')';});};
+  upd(skillsEl,S.skills);
+}
+
+function openStats(){
+  S.paused=true;
+  const t=Math.max(1,S.t), dps=Math.round(S.stats.dmg/t);
+  const mm=Math.floor(S.t/60), ss=String(Math.floor(S.t%60)).padStart(2,'0');
+  let h='<h1>数据</h1><p>第 '+S.wave+' 波 · 存活 '+mm+':'+ss+'</p>';
+  h+='<div style="font-size:13px;line-height:1.9;color:#4a3d2f">';
+  h+='HP '+Math.ceil(S.hp)+' / '+S.maxhp+(S.shield>0?' · 护盾 '+Math.floor(S.shield):'')+'<br>';
+  h+='场上敌人 '+S.enemies.length+' · 击杀 '+S.stats.kills+'<br>';
+  h+='总伤害 '+Math.round(S.stats.dmg)+' · 均伤 '+dps+'/秒<br>';
+  h+='回复 '+(S.stats.heal||0).toFixed(0)+' · 均回 '+(S.stats.heal?((S.stats.heal/Math.max(1,S.t))*1).toFixed(1):'0')+'/秒<br>';
+  h+='词条池 '+MODS.length+' 条 · 已装 '+S.skills.reduce((a,s)=>a+s.mods.length,0)+' 条';
+  h+='</div><hr style="border-color:#d8cbb2;margin:10px 0">';
+  for(const sk of S.skills){
+    const st=sk.stats, real=st.dmg*(1+S.wave*st.rampPerWave);
+    h+='<div style="font-size:13px;line-height:1.9;margin-bottom:8px">';
+    const pick=sk.base.kind==='heal'?('回血约 '+Math.round(real*(1+(st.healBonus||0)))):(sk.base.kind==='summon'?('召唤伤害约 '+Math.round(real*(1+st.summonDmg))):('每击约 '+Math.round(real)+' · 目标 '+st.targets+' · 暴击 '+Math.round(st.crit*100)+'%'));
+    h+='<b style="color:'+sk.base.color+'">'+sk.base.name+'</b>（'+sk.base.elem+'） · '+pick+' · 冷却 '+st.cd.toFixed(2)+'s';
+    h+='<br><span style="color:#7a6a56">词条：'+(sk.mods.map(m=>m.name).join('、')||'无')+'</span>';
+    h+='</div>';
+  }
+  panel.innerHTML=h+'<button class="btn" id="closeStats">关掉</button>';
+  overlay.style.display='flex';
+  panel.querySelector('#closeStats').onclick=()=>{ overlay.style.display='none'; S.paused=false; };
+}
+
+const INKCOL={slime:'#8fae7f',runner:'#c9a86a',tank:'#8a7fa0',split:'#c98f8f',healer:'#7fae9f',boss:'#b58a5a'};
+function draw(){
+  const W=cvs.clientWidth,H=cvs.clientHeight;
+  // ---- 水墨背景 ----
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#f4efe2');g.addColorStop(.55,'#ede4d1');g.addColorStop(1,'#e3d7c0');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // 远山
+  ctx.save();
+  const far=(mh,col,yo)=>{
+    ctx.beginPath();ctx.moveTo(0,H*yo);
+    const n=7;
+    for(let i=0;i<=n;i++){
+      const x=W*i/n, y=H*yo-mh*(0.35+0.65*Math.abs(Math.sin(i*1.7+0.6)));
+      ctx.quadraticCurveTo(x-W/n*0.5,H*yo-mh*0.3,x,y);
+    }
+    ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+    ctx.fillStyle=col;ctx.fill();
+  };
+  far(H*0.16,'rgba(122,108,86,.13)',0.42);
+  far(H*0.12,'rgba(96,84,64,.10)',0.52);
+  // 月
+  ctx.globalAlpha=.5;ctx.fillStyle='#f7f1e2';ctx.beginPath();ctx.arc(W*0.78,H*0.13,26,0,7);ctx.fill();
+  ctx.globalAlpha=1;
+  // 竹影（右）
+  const bamboo=(x0,w,col)=>{
+    ctx.strokeStyle=col;ctx.lineWidth=w;
+    for(let k=0;k<3;k++){
+      const x=x0+k*9;
+      ctx.beginPath();ctx.moveTo(x,H*0.15);ctx.quadraticCurveTo(x-6,H*0.55,x-2,H*1.02);ctx.stroke();
+      for(let j=1;j<7;j++){
+        const yy=H*(0.2+j*0.11);
+        ctx.lineWidth=Math.max(1,w-1);ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x+16-j*1.5,yy-9);ctx.stroke();
+      }
+    }
+  };
+  bamboo(W-4,3,'rgba(58,92,62,.16)');
+  // 墨点
+  const seed=(n)=>Math.abs(Math.sin(n*127.1)*43758.5453)%1;
+  ctx.fillStyle='rgba(40,34,26,.05)';
+  for(let i=0;i<26;i++){
+    const x=seed(i+1)*W, y=seed(i+11)*H, r=2+seed(i+21)*7;
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+  }
+  // 地面淡墨
+  ctx.fillStyle='rgba(110,92,66,.07)';ctx.fillRect(0,H*0.86,W,H*0.14);
+  ctx.restore();
+  const px=34,py=playerY();
+  const orb=(y,color,label)=>{
+    ctx.save();ctx.shadowColor=color;ctx.shadowBlur=16;ctx.fillStyle=color;
+    ctx.beginPath();ctx.arc(px,y,14,0,7);ctx.fill();ctx.restore();
+    ctx.fillStyle='#04121c';ctx.font='bold 11px sans-serif';ctx.fillText(label,px-6,y+4);
+  };
+  ctx.save();
+  ctx.fillStyle='#1b1b1b';ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py,15,0,7);ctx.fill();
+  ctx.beginPath();ctx.moveTo(px-12,py-9);ctx.lineTo(px-18,py-24);ctx.lineTo(px-3,py-14);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(px+12,py-9);ctx.lineTo(px+18,py-24);ctx.lineTo(px+3,py-14);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px-5,py-1,3.4,0,7);ctx.fill();ctx.beginPath();ctx.arc(px+5,py-1,3.4,0,7);ctx.fill();
+  ctx.fillStyle='#1b1b1b';ctx.beginPath();ctx.arc(px-5,py-1,1.5,0,7);ctx.fill();ctx.beginPath();ctx.arc(px+5,py-1,1.5,0,7);ctx.fill();
+  // 胡须
+  ctx.strokeStyle='#1b1b1b';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(px-7,py+5);ctx.lineTo(px-17,py+2);ctx.moveTo(px-7,py+7);ctx.lineTo(px-17,py+9);
+  ctx.moveTo(px+7,py+5);ctx.lineTo(px+17,py+2);ctx.moveTo(px+7,py+7);ctx.lineTo(px+17,py+9);ctx.stroke();
+  // 尾巴
+  ctx.beginPath();ctx.moveTo(px-13,py+10);ctx.quadraticCurveTo(px-26,py+16,px-20,py+30);ctx.lineWidth=4;ctx.stroke();
+  ctx.restore();
+  for(const sm of S.summons){ ctx.save();ctx.fillStyle=sm.color||'#b07a45';ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sm.x,sm.y,sm.r,0,7);ctx.fill();ctx.stroke();ctx.restore(); }
+  for(const e of S.enemies){
+    ctx.save();
+    ctx.fillStyle=e.hit>0?'#fff':(INKCOL[e.type]||'#9a8f7a');
+    ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,7);ctx.fill();
+    ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;ctx.stroke();
+    // 眼睛与表情
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(e.x-e.r*0.32,e.y-e.r*0.12,e.r*0.22,0,7);ctx.fill();ctx.beginPath();ctx.arc(e.x+e.r*0.32,e.y-e.r*0.12,e.r*0.22,0,7);ctx.fill();
+    ctx.fillStyle='#1b1b1b';ctx.beginPath();ctx.arc(e.x-e.r*0.3,e.y-e.r*0.1,e.r*0.1,0,7);ctx.fill();ctx.beginPath();ctx.arc(e.x+e.r*0.34,e.y-e.r*0.1,e.r*0.1,0,7);ctx.fill();
+    ctx.strokeStyle='#1b1b1b';ctx.lineWidth=1.6;ctx.beginPath();
+    if(e.type==='healer'){ctx.moveTo(e.x-4,e.y+e.r*0.35);ctx.lineTo(e.x+4,e.y+e.r*0.35);}
+    else{ctx.arc(e.x,e.y+e.r*0.18,e.r*0.28,0.15*Math.PI,0.85*Math.PI);}
+    ctx.stroke();
+    if(e.type==='boss'){ctx.fillStyle='#c25e2a';ctx.beginPath();ctx.moveTo(e.x-10,e.y-e.r-6);ctx.lineTo(e.x-4,e.y-e.r+2);ctx.lineTo(e.x,e.y-e.r-8);ctx.lineTo(e.x+4,e.y-e.r+2);ctx.lineTo(e.x+10,e.y-e.r-6);ctx.closePath();ctx.fill();}
+    if(e.type==='tank'){ctx.strokeStyle='#5b4a8a';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y,e.r-4,0,7);ctx.stroke();}
+    if(e.markT>0){const a=0.45+0.35*Math.sin(S.t*8);ctx.save();ctx.strokeStyle='rgba(95,143,90,'+a.toFixed(2)+')';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(e.x,e.y,e.r+5,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#5f8f5a';ctx.beginPath();ctx.arc(e.x,e.y-e.r-14,3,0,7);ctx.fill();ctx.restore();}
+    ctx.restore();
+    const bw=e.r*2;
+    ctx.fillStyle='#2a3644';ctx.fillRect(e.x-e.r,e.y-e.r-9,bw,4);
+    ctx.fillStyle='#ff6b6b';ctx.fillRect(e.x-e.r,e.y-e.r-9,bw*Math.max(0,e.hp/e.maxhp),4);
+    ctx.font='bold 12px sans-serif';
+    const ew=ctx.measureText(e.elem||'').width;
+    ctx.fillStyle='rgba(4,18,28,.78)';ctx.fillRect(e.x-e.r-2,e.y-e.r-18,ew+8,15);
+    ctx.fillStyle=EC[e.elem]||'#9fb3c8';ctx.fillText(e.elem,e.x-e.r+2,e.y-e.r-7);
+    if(e.affix){ const af=AFFIX[e.affix]; ctx.font='bold 11px sans-serif'; const aw=ctx.measureText(af.name).width;
+      ctx.fillStyle='rgba(250,246,236,.9)'; ctx.fillRect(e.x-e.r-2,e.y-e.r-34,aw+8,14);
+      ctx.fillStyle=af.color; ctx.fillText(af.name,e.x-e.r+2,e.y-e.r-23); }
+    if(e.burnT>0){ctx.fillStyle='#ff8a5c';ctx.beginPath();ctx.arc(e.x+e.r*0.7,e.y-e.r*0.6,3,0,7);ctx.fill();}
+    if(e.poiT>0){ctx.fillStyle='#7ce37c';ctx.beginPath();ctx.arc(e.x-e.r*0.7,e.y-e.r*0.6,3,0,7);ctx.fill();}
+    if(e.slowT>0){ctx.strokeStyle='#8ff0e0';ctx.beginPath();ctx.arc(e.x,e.y,e.r+3,0,7);ctx.stroke();}
+    if(e.type==='healer'){ctx.strokeStyle='#8ff0e0';ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(e.x,e.y,e.r+12,0,7);ctx.stroke();ctx.globalAlpha=1;}
+  }
+  for(const b of S.bolts){ctx.strokeStyle=b.color;ctx.globalAlpha=Math.min(1,b.life/0.16);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(b.x2,b.y2);ctx.stroke();ctx.globalAlpha=1;}
+  for(const t of S.texts){ctx.globalAlpha=Math.min(1,t.t/0.7);ctx.fillStyle=t.crit?'#ffd166':'#e6edf3';ctx.font=(t.crit?'bold 16px':'13px')+' sans-serif';ctx.fillText(t.v,t.x-8,t.y-(0.7-t.t)*30);}
+  ctx.globalAlpha=1;
+  for(const r of (S.rings||[])){ ctx.globalAlpha=Math.max(0,r.t/0.4)*0.85; ctx.strokeStyle=r.c||'#8a7a63'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.stroke(); }
+  for(const q of (S.parts||[])){ ctx.globalAlpha=Math.max(0,q.t/q.max); ctx.fillStyle='#6b5c45'; ctx.beginPath(); ctx.arc(q.x,q.y,q.r,0,Math.PI*2); ctx.fill(); }
+  ctx.globalAlpha=1;
+}
+
+function waveClear(){
+  SFX.wave();
+  if(S.drafting) return;
+  let heal=0; for(const sk of S.skills) heal+=sk.stats.healWave;
+  if(heal) S.hp=Math.min(S.maxhp,S.hp+heal);
+  S.running=false; S.drafting=true; S.draftsLeft=1; draft();
+}
+
+function draft(){
+  SFX.tick();
+  const recent=S.recent||[];
+  let cand=MODS.filter(m=>recent.indexOf(m.id)<0);
+  if(cand.length<8) cand=MODS.slice();
+  const pool=cand.slice().sort(()=>Math.random()-0.5).slice(0,4);
+  window.__pool=pool;
+  S.recent=recent.concat(pool.map(m=>m.id)).slice(-10);
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>你挑一条</h1><p>挑一条，装到你身上的技能上。</p><div class="cards" id="cards"></div>';
+  const c=panel.querySelector('#cards');
+  pool.forEach(m=>{
+    const el=document.createElement('div');el.className='card';
+    el.innerHTML='<b>'+m.name+'</b><span>'+m.desc+'</span>';
+    el.onclick=()=>{
+      S.pending=m; overlay.style.display='none';
+      hud('点你的一个技能，装上「'+m.name+'」');
+      [...skillsEl.children].forEach(el=>el.classList.add('pick'));
+    };
+    c.appendChild(el);
+  });
+}
+
+function gameOver(){
+  if(S.over) return;
+  SFX.over();
+  S.running=false;S.over=true; wdRecord(); try{window.wdSubmitGameOver&&window.wdSubmitGameOver(S.wave);}catch(e){} S.paused=true;S.drafting=false;S.enemies=[];S.bolts=[];
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>倒了</h1><p>撑到第 '+S.wave+' 波。这一局到这儿。</p>'
+   +'<button class="btn" id="again" style="background:#c9603c;color:#fff">再来一局</button>'
+   +'<button class="btn" id="quit" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">退出</button>';
+  panel.querySelector('#again').onclick=()=>{ overlay.style.display='none'; pickSkill(); };
+  panel.querySelector('#quit').onclick=()=>{
+    panel.innerHTML='<h1>这一局到这儿</h1><p>可以关掉这个页面了。</p>'
+      +'<button class="btn" id="again2" style="background:#c9603c;color:#fff">再开一局</button>';
+    panel.querySelector('#again2').onclick=()=>{ overlay.style.display='none'; pickSkill(); };
+    try{ window.close(); }catch(e){}
+  };
+}
+function win(){
+  S.running=false;S.over=true;
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>过了</h1><p>这局清完了。</p><button class="btn" id="again">再玩一局</button>';
+  panel.querySelector('#again').onclick=start;
+}
+
+function start(playerBase){
+  Object.assign(S,{hp:150,maxhp:150,shield:0,wave:1,enemies:[],bolts:[],texts:[],running:true,paused:false,drafting:false,draftsLeft:0,pending:null,t:0,over:false,stats:{kills:0,dmg:0,heal:0}});
+  S.rings=[];S.parts=[];S.shake=0;cvs.style.transform='';actx();
+  initSkills(playerBase); renderSkills();
+  overlay.style.display='none';
+  waveTxt.textContent='第 1 波';
+  S.enemies=[]; spawnWave();
+}
+
+function pickSkill(){
+  overlay.style.display='flex';
+  let html='<h1>挑一个起手</h1>'+wdBestLine()+'<p>开局只带一门，之后每三波多解锁一门。</p><button id="randPick" style="width:100%;margin:8px 0 4px;padding:9px;border:1px solid #d8cbb2;border-radius:9px;background:#e9dfc9;color:#2b241c;font-size:14px">随便来一门</button><div class="cards" id="pickCards"></div>';
+  panel.innerHTML=html;
+  const c=panel.querySelector('#pickCards');
+  const rp=document.getElementById('randPick');
+  if(rp) rp.onclick=()=>start(BASE[Math.floor(Math.random()*BASE.length)]);
+  const pick=BASE.slice().sort(()=>Math.random()-0.5).slice(0,5);
+  pick.forEach(b=>{
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML='<b style="color:'+b.color+'">'+b.name+'</b> <b>'+b.dmg+' 伤害</b><span>'+(b.lane?b.lane+'系 · ':'')+'冷却 '+b.cd+' 秒'+(b.kind==='aoe'?'，范围伤害':'')+'</span>'+(b.note?'<span style="color:#8a6a4a">'+b.note+'</span>':'');
+    el.onclick=()=>start(b);
+    c.appendChild(el);
+  });
+}
+
+function intro(){
+  overlay.style.display='flex';
+  panel.innerHTML='<h1>灵质空间 · 六大系</h1><p>你是刚凝出灵识的妖精。开局一门灵质能力，无限波，越往后越狠。<br><br>每清一波捡一条灵质碎片，装到技能上；每三波多解锁一门能力。金木水火土相克：克制打 1.5 倍，被克只吃 0.75。右上角「数据」能看每一击的伤害和装了什么。</p><button class="btn" id="go">开打</button>';
+  panel.querySelector('#go').onclick=()=>{resize();pickSkill();};
+}
+
+function resize(){
+  const r=cvs.getBoundingClientRect();
+  cvs.width=Math.round(r.width*devicePixelRatio);
+  cvs.height=Math.round(r.height*devicePixelRatio);
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+window.addEventListener('resize',resize);
+
+resize(); initSkills(null); renderSkills(); intro(); requestAnimationFrame(loop);
+</script>
+
+<script>
+(function(){
+  var SSO='https://sso.umrc.cn', CID='client_76bb309d53fc66a3';
+  var REDIRECT="https://starlit-panda-37ecfa.netlify.app";
+  function b64u(buf){var b='';var a=new Uint8Array(buf);for(var i=0;i<a.length;i++)b+=String.fromCharCode(a[i]);return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+  function rnd(n){return b64u(crypto.getRandomValues(new Uint8Array(n)));}
+  function b64d(t){var s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));var out='';for(var i=0;i<s.length;i++){out+='%'+('00'+s.charCodeAt(i).toString(16)).slice(-2);}return decodeURIComponent(out);}
+  function hint(t){var h=document.getElementById('hint');if(!h)return;h.textContent=t;h.classList.add('on');setTimeout(function(){h.classList.remove('on');},4200);}
+  function user(){try{return JSON.parse(localStorage.getItem('wd_user')||'null');}catch(e){return null;}}
+  function paint(){var b=document.getElementById('authBtn');if(!b)return;var u=user();b.textContent=u?u.name:'登录';b.title=u?('已登录：'+u.name+'，点此退出'):'用 SSO 登录，进度绑定账号';}
+  function login(){
+    var v=rnd(48), s=rnd(16);
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(function(d){
+      var ch=b64u(d);
+      sessionStorage.setItem('pkce',JSON.stringify({v:v,s:s}));
+      var q=new URLSearchParams({response_type:'code',client_id:CID,redirect_uri:REDIRECT,scope:'openid profile',state:s,code_challenge:ch,code_challenge_method:'S256'});
+      location.href=SSO+'/authorize.php?'+q.toString();
+    });
+  }
+  function finish(){
+    var q=new URLSearchParams(location.search), code=q.get('code');
+    if(!code) return;
+    var st=q.get('state'), pk=null;
+    try{pk=JSON.parse(sessionStorage.getItem('pkce')||'null');}catch(e){}
+    history.replaceState(null,'',location.pathname);
+    if(!pk||pk.s!==st){hint('登录校验失败，再试一次');return;}
+    var body=new URLSearchParams({grant_type:'authorization_code',code:code,redirect_uri:REDIRECT,client_id:CID,code_verifier:pk.v});
+    fetch(SSO+'/token.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(!j.id_token) throw new Error(j.error_description||j.error||'换取令牌失败');
+        var p=JSON.parse(b64d(j.id_token.split('.')[1]));
+        var u={sub:p.sub,name:p.name||p.nickname||p.preferred_username||p.sub};
+        localStorage.setItem('wd_user',JSON.stringify(u));
+        sessionStorage.removeItem('pkce'); paint(); hint('登录成功：'+u.name);
+      })
+      .catch(function(e){hint('登录失败：'+e.message);});
+  }
+  window.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById('authBtn');
+    if(b) b.onclick=function(){ if(user()){localStorage.removeItem('wd_user');paint();hint('已退出登录');} else login(); };
+    paint(); finish();
+  });
+})();
+
+</script>
+<script>
+/* ---- 视觉与机制扩展（v2）：灵息、领域、连斩 ---- */
+(function(){
+  const qiBar=document.getElementById('qiBar'), comboTxt=document.getElementById('comboTxt'), domainBtn=document.getElementById('domainBtn');
+  const NEW_SKILLS=[
+    {id:'frost',name:'御灵·霜',elem:'水',lane:'御灵',dmg:12,cd:1.7,color:'#7fb2d6',note:'落霜成刃，减速四成五',onHit:[{k:'slow',f:.45,dur:2.2}]},
+    {id:'sealroot',name:'锁御·镇',elem:'',lane:'锁御',dmg:7,cd:3.6,aoe:true,color:'#7c7396',note:'镇住一片，定身一秒半、削敌一档',onHit:[{k:'stun',dur:1.5},{k:'weak',f:.8,dur:4}]},
+    {id:'plume',name:'造物·翎',elem:'',lane:'造物',dmg:9,cd:5.2,kind:'summon',color:'#b07a45',note:'召一只翎羽灵，替你打六秒'},
+    {id:'rift2',name:'空间·隙',elem:'',lane:'空间',dmg:26,cd:3.2,color:'#8878ad',note:'撕开裂隙，被标的目标吃更多伤害',onHit:[{k:'mark',dur:4}]},
+    {id:'devour',name:'生灵·噬',elem:'',lane:'生灵',dmg:14,cd:3.0,color:'#5f8f5a',note:'咬住回血，伤害的三成补给自己',drain:0.35},
+    {id:'breakseal',name:'锁御·破',elem:'',lane:'锁御',dmg:15,cd:3.4,color:'#7c7396',note:'专砸护盾，顺手把盾削掉',breakshield:1},
+    {id:'blast',name:'御灵·爆',elem:'火',lane:'御灵',dmg:11,cd:2.2,color:'#c9603c',note:'目标身上有毒或灼烧就炸一下',detonate:1}
+  ];
+  BASE.push(...NEW_SKILLS);
+  S.qi=0; S.combo=0; S.comboT=0;
+  const _kill=kill;
+  kill=function(e){
+    const deadBefore=e.dead;
+    _kill(e);
+    if(!deadBefore){ S.qi=Math.min(100,(S.qi||0)+9); S.combo=(S.combo||0)+1; S.comboT=3.2; }
+  };
+  const _damage=damage;
+  damage=function(e,amt,crit){
+    const mult=1+Math.min(0.6,(S.combo||0)*0.012);
+    return _damage(e,amt*mult,crit);
+  };
+  function domain(){
+    if((S.qi||0)<100 || S.paused || S.over) return;
+    S.qi=0;
+    for(const e of S.enemies){ if(!e.dead){ damage(e, 60+18*S.wave, false); e.slowT=3; e.slowF=Math.max(e.slowF||0,.6); } }
+    S.shake=Math.max(S.shake||0,7); S.rings.push({x:cvs.clientWidth/2,y:cvs.clientHeight/2,r:10,t:0,life:.9,c:'#8c3a2a'});
+    try{ SFX.kill(); }catch(_){}
+  }
+  domainBtn.onclick=domain;
+  const _draw=draw;
+  draw=function(){
+    _draw();
+    if(S.comboT>0){ S.comboT-=1/60; if(S.comboT<=0){ S.combo=0; } }
+    qiBar.style.width=((S.qi||0))+'%';
+    domainBtn.classList.toggle('off',(S.qi||0)<100);
+    comboTxt.textContent=(S.combo>1?('连斩 ×'+S.combo):'');
+  };
+
+  // ---- 新词条（v3）：在 recalc 后二次加工 ----
+  const NEW_MODS=[
+    {id:'m_crit2',name:'御灵·锐',desc:'暴击率再 +10%',tag:'暴击+10%'},
+    {id:'m_dmg20',name:'御灵·沉',desc:'这个技能伤害 +20%',tag:'伤害+20%'},
+    {id:'m_cd8',name:'锁御·省',desc:'冷却 -8%',tag:'冷却-8%'},
+    {id:'m_hp',name:'生灵·强',desc:'生命上限 +25，立刻回复',tag:'生命+25'},
+    {id:'m_elem',name:'御灵·通',desc:'五行克制加成再 +25%',tag:'克制+25%'},
+    {id:'m_guard',name:'锁御·垒',desc:'每波开始多 8 点护盾',tag:'护盾+8'},
+    {id:'m_heal2',name:'心灵·润',desc:'回血量 +30%',tag:'回血+30%'},
+    {id:'m_critdmg',name:'御灵·烈',desc:'暴击伤害 +0.4',tag:'暴伤+0.4'}
+  ];
+  MODS.push(...NEW_MODS);
+  const _recalc=recalc;
+  recalc=function(sk){
+    _recalc(sk); const st=sk.stats;
+    // 同系共鸣：词条名以技能所属系开头者，每条 +8% 伤害，最多三条
+    { const lane=sk.base&&sk.base.lane||'';
+      let same=0;
+      (sk.mods||[]).forEach(function(id){ var m=MODS.find(function(x){return x.id===id;}); if(m&&lane&&m.name.indexOf(lane)===0) same++; });
+      same=Math.min(3,same); st.resonance=same;
+      (sk.mods||[]).forEach(function(id){
+        if(id==='m_backwater') st.backwater=1;
+        if(id==='m_dawn') st.dawn=1;
+        if(id==='m_fewskill') st.fewskill=1;
+        if(id==='m_latewave') st.latewave=1;
+        if(id==='m_bosswave') st.bosswave=1;
+        if(id==='m_summoner') st.summoner=1;
+      });
+      if(same) st.dmg*=(1+same*0.08);
+    }
+    const has=(id)=>sk.mods.indexOf(id)>=0;
+    if(has('m_crit2')) st.crit=(st.crit||0)+0.10;
+    if(has('m_dmg20')) st.dmg=(st.dmg||0)*1.2;
+    if(has('m_cd8')) st.cd=(st.cd||0)*0.92;
+    if(has('m_elem')) st.elemBonus=(st.elemBonus||0)+0.25;
+    if(has('m_heal2')) st.healBonus=(st.healBonus||0)+0.30;
+    if(has('m_critdmg')) st.critMult=(st.critMult||2.5)+0.4;
+    return st;
+  };
+  renderSkills();
+})();
+
+function wdLoad(){try{return JSON.parse(localStorage.getItem('wd_save_v1')||'{}')}catch(e){return {}}}
+function wdSave(o){try{localStorage.setItem('wd_save_v1',JSON.stringify(o))}catch(e){}}
+function wdRecord(){const s=wdLoad(); s.best=Math.max(s.best||0,S.wave||0); s.muted=!!SFXMuted; s.ts=Date.now(); wdSave(s);}
+function wdBestLine(){const s=wdLoad(); return s.best?('<p>最远到第 '+s.best+' 波。</p>'):'';}
+
+try{const _s=wdLoad(); if(_s.muted){SFXMuted=true; var _sb=document.getElementById('soundBtn'); if(_sb) _sb.textContent='静音';}}catch(e){}
+</script>
+
+<div id="rankModal" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(24,20,14,.55);align-items:center;justify-content:center">
+  <div style="width:min(92vw,420px);max-height:76vh;overflow:auto;background:#fbf6ea;border:1px solid #c9b791;border-radius:10px;padding:16px 18px;color:#2b241c;font:14px/1.6 'Microsoft YaHei',sans-serif">
+    <div style="display:flex;align-items:center;margin-bottom:10px"><b style="font-family:KaiTi,serif;font-size:20px;letter-spacing:2px">排行榜</b><span id="rankClose" style="margin-left:auto;cursor:pointer;color:#8a6a2f">关闭</span></div>
+    <div id="rankBody" style="font-size:13px;color:#4a3d2f">读取中…</div>
+  </div>
+</div>
+<script>
+(function(){
+  function uname(){try{var u=JSON.parse(localStorage.getItem('wd_user')||'null');return (u&&(u.name||u.nickname||u.preferred_username||u.username))||'无名鲸';}catch(e){return '无名鲸';}}
+  window.wdSubmitGameOver=function(wave){
+    if(!wave||wave<1) return;
+    try{fetch('/api/scores',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:uname(),wave:wave})}).catch(function(){});}catch(e){}
+  };
+  var modal=document.getElementById('rankModal'), body=document.getElementById('rankBody');
+  function esc(v){return String(v).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+  function render(top){
+    if(!top||!top.length){body.innerHTML='还没有记录，先打一局。';return;}
+    var h='<table style="width:100%;border-collapse:collapse"><tr style="color:#8a6a2f"><td>#</td><td>名字</td><td style="text-align:right">波数</td></tr>';
+    top.forEach(function(r,i){h+='<tr style="border-top:1px solid #e6dcc4"><td style="padding:4px 0">'+(i+1)+'</td><td>'+esc(r.name)+'</td><td style="text-align:right">'+r.wave+'</td></tr>';});
+    body.innerHTML=h+'</table>';
+  }
+  function open(){
+    modal.style.display='flex'; body.textContent='读取中…';
+    fetch('/api/scores').then(function(r){return r.json();}).then(function(j){render(j&&j.top);}).catch(function(){body.textContent='连不上排行榜，可能还没部署函数。';});
+  }
+  document.getElementById('rankBtn').onclick=open;
+  document.getElementById('rankClose').onclick=function(){modal.style.display='none';};
+  modal.onclick=function(e){if(e.target===modal)modal.style.display='none';};
+  window.wdOpenRank=open;
+})();
+</script>
 <script>
-const cvs=document.getElementById('stage'),ctx=cvs.getContext('2d');
-const skillsEl=document.getElementById('skills'),skillsoverlay=document.getElementById('overlay'),panel=document.getElementById('panel');
-const hpBar=document.getElementById('hpBar'),hpTxt=document.getElementById('hpTxt'),waveTxt=document.getElementById('waveTxt'),shieldTxt=document.getElementById('shieldTxt');
-const hintEl=document.getElementById('hint');
-document.getElementById('statBtn').onclick=openStats;
-document.getElementById('soundBtn').onclick=()=>{ SFXMuted=!SFXMuted; document.getElementById('soundBtn').textContent=SFXMuted?'静音':'音效'; if(!SFXMuted) actx(); };
-document.getElementById('restartBtn').onclick=openRestart;
-function openRestart(){
-  const was=S.paused; S.paused=true;
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>重开一局？</h1><p>当前这一局的波数、词条都不留。</p>'
-   +'<button class="btn" id="keepGo" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">接着打</button>'
-   +'<button class="btn" id="doRestart" style="background:#c9603c;color:#fff">重开</button>'
-   +'<button class="btn" id="doQuit" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">退出</button>';
-  document.getElementById('keepGo').onclick=()=>{ overlay.style.display='none'; S.paused=was; };
-  document.getElementById('doRestart').onclick=()=>location.reload();
-  document.getElementById('doQuit').onclick=()=>{ overlay.innerHTML='<div class="panel"><h1>这一局到这儿</h1><p>可以关掉这个页面了。</p></div>'; try{ window.close(); }catch(e){} };
-}
-
-const BASE=[
- {id:'blade',name:'金刃·断岳',elem:'金',lane:'御灵',dmg:9,cd:1.1,color:'#b9a25e',kind:'single',note:'对厚甲与首领伤害 +40%'},
- {id:'fire',name:'炎爆·焚山',elem:'火',lane:'御灵',dmg:24,cd:1.9,color:'#c9603c',kind:'single',note:'命中处炸开，附近敌人吃五成',splashF:0.5},
- {id:'tide',name:'寒潮·凝渊',elem:'水',lane:'御灵',dmg:19,cd:1.6,color:'#5f93a6',kind:'single',onHit:[{k:'slow',f:0.4,dur:2}],freezeChance:0.18,note:'减速，有一成八的机会冻住一秒'},
- {id:'rock',name:'落石·压顶',elem:'土',lane:'御灵',dmg:30,cd:2.4,color:'#9a7f5c',kind:'aoe',onHit:[{k:'knock'}],note:'范围砸落，把敌人往后推'},
- {id:'seal',name:'制灵·封',elem:'无',lane:'锁御',dmg:14,cd:1.8,color:'#7c7396',kind:'aoe',onHit:[{k:'weak',f:0.7,dur:3},{k:'stun',dur:0.8}],note:'镇住一片，敌伤降三成并定身'},
- {id:'paint',name:'画虎·召灵',elem:'无',lane:'造物',dmg:16,cd:5.0,color:'#b07a45',kind:'summon',note:'画一只虎灵替你打六秒'},
- {id:'trace',name:'追毫·锁迹',elem:'无',lane:'生灵',dmg:13,cd:2.1,color:'#b78a90',kind:'single',onHit:[{k:'mark',dur:6}],note:'留下灵痕，被打时额外受伤'},
- {id:'cleanse',name:'清洗·归心',elem:'无',lane:'心灵',dmg:22,cd:4.5,color:'#a98cba',kind:'heal',note:'洗去一身尘，回血；溢出转盾'},
- {id:'realm',name:'灵域·陷',elem:'空间',lane:'空间',dmg:7,cd:1.8,color:'#8878ad',kind:'aoe',onHit:[{k:'slow',f:0.3,dur:2}],note:'铺开灵域，里面的人举步慢'},
- {id:'drain',name:'锁御·卸',elem:'无',lane:'锁御',dmg:18,cd:2.6,color:'#7c7396',kind:'single',onHit:[{k:'weak',f:0.55,dur:6}],note:'卸去敌势，六秒内它打你轻一半'},
- {id:'bewitch',name:'心灵·惑',elem:'心灵',lane:'心灵',dmg:8,cd:3.4,color:'#a98cba',kind:'aoe',onHit:[{k:'stun',dur:1.2}],note:'惑住一片，定身一秒多'},
- {id:'ward',name:'锁御·护身',elem:'无',lane:'锁御',dmg:6,cd:4.5,color:'#7c7396',kind:'buff',note:'给自己二十五点护盾，三秒内受伤少三成'},
- {id:'charm',name:'心灵·摄魂',elem:'无',lane:'心灵',dmg:10,cd:5.0,color:'#a98cba',kind:'single',onHit:[{k:'charm',dur:2.5}],note:'摄住一只，让它往回走两秒半'},
- {id:'echo',name:'空间·回响',elem:'空间',lane:'空间',dmg:12,cd:3.2,color:'#8878ad',kind:'single',onHit:[{k:'echo',dur:1.2,mul:0.6}],note:'一秒二后再响一次，六成伤害'},
- {id:'thunder',name:'御灵·雷',elem:'金',lane:'御灵',dmg:18,cd:2.0,color:'#c9b06a',kind:'single',onHit:[{k:'chain'}],note:'劈中后跳到最近的一只'},
- {id:'thorn',name:'御灵·毒藤',elem:'木',lane:'御灵',dmg:8,cd:1.6,color:'#5f8f5a',kind:'single',onHit:[{k:'poison',dps:4,dur:4}],note:'伤害轻，专留毒，毒可叠'},
- {id:'bind',name:'锁御·缚',elem:'无',lane:'锁御',dmg:9,cd:4.0,color:'#7c7396',kind:'aoe',onHit:[{k:'stun',dur:1.6},{k:'slow',f:0.45,dur:3}],note:'缚住一片，定身一秒六'},
- {id:'raven',name:'造物·鸦',elem:'无',lane:'造物',dmg:13,cd:4.2,color:'#b07a45',kind:'summon',note:'画一只灵鸦，替你啄六秒'},
- {id:'quake',name:'生灵·震魂',elem:'无',lane:'生灵',dmg:18,cd:2.8,color:'#5f8f5a',kind:'aoe',onHit:[{k:'mark',dur:5}],note:'震魂一片，留下灵痕'},
- {id:'rift',name:'空间·裂',elem:'空间',lane:'空间',dmg:34,cd:3.6,color:'#8878ad',kind:'single',onHit:[{k:'weak',f:0.8,dur:2.5}],note:'撕开一道裂隙，单体重击'},
-];
-
-const MODS=[
- {id:'dmg50',name:'御灵·锋',desc:'这个技能伤害 +50%',tag:'伤害+50%'},
- {id:'speed30',name:'御灵·疾',desc:'冷却缩短三成',tag:'攻速+30%'},
- {id:'pierce',name:'御灵·散',desc:'额外命中一个目标',tag:'目标+1'},
- {id:'burn',name:'灼灵',desc:'命中后每秒烧 3 点，持续 3 秒',tag:'灼烧3/s'},
- {id:'freeze',name:'寒缚',desc:'命中后减速四成，两秒',tag:'减速40%'},
- {id:'chain',name:'灵链',desc:'命中后跳到最近目标，五成伤害',tag:'连锁50%'},
- {id:'lifesteal',name:'噬灵',desc:'回复伤害的两成',tag:'吸血20%'},
- {id:'crit',name:'洞察',desc:'暴击率 +30%',tag:'暴击+30%'},
- {id:'critdmg',name:'致命',desc:'暴击伤害提高到 2.5 倍',tag:'爆伤2.5x'},
- {id:'cull',name:'斩杀',desc:'目标两成半血以下时伤害 +80%',tag:'残血增伤'},
- {id:'shielddmg',name:'借势',desc:'身上有护盾时伤害 +20%',tag:'护盾增伤'},
- {id:'rage',name:'狂怒',desc:'每损失一成血，伤害 +5%',tag:'越残越狠'},
- {id:'deepPoison',name:'深毒',desc:'中毒可叠到六层',tag:'毒叠6层'},
- {id:'killheal',name:'嗜血',desc:'每次击杀回 7 点血',tag:'击杀回血7'},
- {id:'knock',name:'冲击',desc:'命中把敌人推开一段',tag:'击退'},
- {id:'poison',name:'淬毒',desc:'每秒 2 点，持续 4 秒，可叠三层',tag:'中毒2/s'},
- {id:'slowp',name:'迟滞',desc:'减速再叠一成五，持续两秒',tag:'减速+15%'},
- {id:'stunp',name:'定神',desc:'定身再叠零点四秒',tag:'定身+0.4s'},
- {id:'markp',name:'寻踪',desc:'灵痕再续两秒，并多吃一成五',tag:'灵痕+2s'},
- {id:'shield',name:'灵气罩',desc:'每次命中给自己 2 点护盾，上限 30',tag:'护盾+2'},
- {id:'cdr',name:'冥想',desc:'冷却再降两成',tag:'冷却-20%'},
- {id:'execute',name:'处决',desc:'目标三成血以下时伤害翻倍',tag:'处决x2'},
- {id:'bounce',name:'弹射',desc:'多打一个目标，四成伤害',tag:'弹射40%'},
- {id:'splash',name:'溅射',desc:'命中点周围也吃五成伤害',tag:'溅射50%'},
- {id:'ramp',name:'蓄势',desc:'每过一波，伤害 +8%',tag:'每波+8%'},
- {id:'multihit',name:'连击',desc:'同一次施法再打一下，六成伤害',tag:'连击60%'},
- {id:'slowdmg',name:'趁滞',desc:'对减速目标伤害 +40%',tag:'减速增伤'},
- {id:'highhp',name:'斩满',desc:'目标八成血以上时 +50%',tag:'满血增伤'},
- {id:'bosslayer',name:'屠首',desc:'对首领伤害 +40%',tag:'对首领+40%'},
- {id:'armorpen',name:'破甲',desc:'对硬目标（坦克、首领）+50%',tag:'破甲+50%'},
- {id:'chain2',name:'连锁+1',desc:'连锁多跳一个目标',tag:'连锁+1'},
- {id:'splashup',name:'溅射强化',desc:'溅射范围和伤害再提五成',tag:'溅射强化'},
- {id:'burnspread',name:'燎原',desc:'灼烧会传给周围敌人',tag:'灼烧扩散'},
- {id:'freezechance',name:'冰封',desc:'命中两成概率冻住一秒',tag:'冰封20%'},
- {id:'modbonus',name:'灵质压榨',desc:'这个技能每装一条词条，伤害 +6%',tag:'词条+6%'},
- {id:'healwave',name:'回春',desc:'每清一波回 12 点血',tag:'每波回血12'},
- {id:'critheal',name:'血偿',desc:'每次暴击回 4 点血',tag:'暴击回血4'},
- {id:'shieldstart',name:'结盾',desc:'每波开始给 8 点护盾',tag:'每波盾8'},
- {id:'frenzy',name:'狂怒击',desc:'击杀后所有技能冷却减 0.5 秒',tag:'击杀加速'},
- {id:'hp30',name:'壮体',desc:'生命上限 +30，立刻生效',tag:'生命+30'},
- {id:'pierce2',name:'贯穿',desc:'额外命中两个目标',tag:'目标+2'},
- {id:'wuxing',name:'克伐',desc:'五行克制时伤害再 +50%',tag:'克制+50%'},
- {id:'sameelem',name:'同源',desc:'对同属性目标伤害 +50%',tag:'同源+50%'},
- {id:'lane_firm',name:'锁御·固',desc:'每波开始获得 6 点护盾',tag:'护盾+6/波'},
- {id:'lane_bind',name:'锁御·缚',desc:'制灵的削弱与减速延长 1 秒',tag:'控制+1s'},
- {id:'craft_power',name:'造物·灵',desc:'虎灵伤害 +50%',tag:'召唤+50%'},
- {id:'craft_twin',name:'造物·双',desc:'虎灵同时多一只',tag:'召唤+1'},
- {id:'life_mark',name:'生灵·痕',desc:'追毫标记延长 3 秒',tag:'标记+3s'},
- {id:'life_hunt',name:'生灵·猎',desc:'对标记目标伤害 +40%',tag:'猎杀+40%'},
- {id:'mind_clean',name:'心灵·净',desc:'清洗溢出的治疗转成护盾',tag:'治疗转盾'},
- {id:'space_drain',name:'空间·吸',desc:'击杀回复 3 点生命',tag:'击杀回血'},
- {id:'elem_jia',name:'御灵·甲',desc:'木系技能伤害 +30%',tag:'木+30%'},
- {id:'elem_bing',name:'御灵·丙',desc:'火系技能伤害 +30%',tag:'火+30%'},
- {id:'elem_wu',name:'御灵·戊',desc:'土系技能伤害 +30%',tag:'土+30%'},
- {id:'elem_geng',name:'御灵·庚',desc:'金系技能伤害 +30%',tag:'金+30%'},
- {id:'elem_ren',name:'御灵·壬',desc:'水系技能伤害 +30%',tag:'水+30%'},
- {id:'space_veil',name:'空间·隐',desc:'受到的伤害降低 10%',tag:'减伤10%'} ,{id:'lane_urn',name:'锁御·瓮',desc:'每波开始额外获得 10 点护盾',tag:'护盾+10/波'}
- ,{id:'craft_pack',name:'造物·群',desc:'虎灵再多两只',tag:'召唤+2'}
- ,{id:'life_scent',name:'生灵·嗅',desc:'对被标记目标再 +30% 伤害',tag:'标记+30%'}
- ,{id:'mind_calm',name:'心灵·静',desc:'清洗的治疗量 +40%',tag:'治疗+40%'}
- ,{id:'space_edge',name:'空间·界',desc:'受到的伤害再降 5%',tag:'减伤+5%'}
- ,{id:'elem_all',name:'御灵·均',desc:'所有属性伤害 +10%',tag:'全属性+10%'}
- ,{id:'cdfast',name:'御灵·速',desc:'冷却再短一成二',tag:'冷却-12%'}
- ,{id:'critup',name:'灵动',desc:'暴击率再 +12%',tag:'暴击+12%'}
- ,{id:'dmg35',name:'御灵·重',desc:'伤害 +35%',tag:'伤害+35%'}
- ,{id:'ctrlplus',name:'锁御·滞',desc:'减速与定身多撑 0.6 秒',tag:'控制+0.6s'}
- ,{id:'guardplus',name:'锁御·壁',desc:'每波多 6 点护盾',tag:'护盾/波+6'}
- ,{id:'healplus',name:'心灵·润',desc:'每波回复 +18',tag:'回血/波+18'}
-
- ,{id:'dmg25',name:'御灵·锐',desc:'这个技能伤害再 +25%',tag:'伤害+25%'}
- ,{id:'cd20',name:'御灵·息',desc:'冷却缩短两成',tag:'冷却-20%'}
- ,{id:'pierce3',name:'御灵·漫',desc:'额外命中三个目标',tag:'目标+3'}
- ,{id:'splashup',name:'燎原',desc:'溅射伤害再提两成五',tag:'溅射+25%'}
- ,{id:'ctrlmore',name:'镇魂',desc:'控制时长再 +0.8 秒',tag:'控制+0.8s'}
- ,{id:'guardmore',name:'锁御·垒',desc:'每波开场多 8 点护盾',tag:'护盾+8/波'}
- ,{id:'elemall',name:'五行·兼',desc:'对所有属性都多两成伤害',tag:'全属性+20%'}
- ,{id:'healup',name:'心灵·润',desc:'回血量 +50%',tag:'回血+50%'}
-];
-const LIMIT_MODS=[
- {id:'m_backwater',name:'限定·背水',desc:'生命低于三成时伤害 +50%',tag:'残血增伤'},
- {id:'m_dawn',name:'限定·初升',desc:'满血时伤害 +40%',tag:'满血增伤'},
- {id:'m_fewskill',name:'限定·孤注',desc:'只带一门技能时伤害 +30%',tag:'单技能增伤'},
- {id:'m_latewave',name:'限定·破局',desc:'十五波之后伤害 +35%',tag:'后期增伤'},
- {id:'m_bosswave',name:'限定·屠首',desc:'首领波伤害 +60%',tag:'首领波增伤'},
- {id:'m_summoner',name:'限定·众行',desc:'每只召唤物给你 +6% 伤害，最多 +30%',tag:'召唤增伤'}
-];
-MODS.push(...LIMIT_MODS);
-
-
-const TYPES={
- slime:{r:15,hp:50,sp:26,color:'#c2a07a',dmg:10,elem:'土'},
- runner:{r:11,hp:34,sp:62,color:'#7ce37c',dmg:8,elem:'木'},
- tank:{r:24,hp:420,sp:11,color:'#e6d68a',dmg:20,elem:'金'},
- split:{r:18,hp:150,sp:24,color:'#8ff0e0',dmg:12,elem:'水'},
- healer:{r:16,hp:180,sp:18,color:'#7ce37c',dmg:8,elem:'木'},
- boss:{r:30,hp:820,sp:12,color:'#ff7a7a',dmg:26,elem:'火'}
-};
-const KE={金:'木',木:'土',土:'水',水:'火',火:'金'};
-const EC={金:'#e6d68a',木:'#7ce37c',水:'#8ff0e0',火:'#ff8a5c',土:'#c2a07a',空间:'#c9a5ff',心灵:'#f5b8ff'};
-function elemMul(a,d){ if(!a||!d) return 1; if(a===d) return 1; if(KE[a]===d) return 1.5; if(KE[d]===a) return 0.75; return 1; }
-
-
-function waveComp(n){
-  const g=[];
-  g.push({t:'slime', n:Math.min(13, 2+Math.floor(n*0.55))});
-  if(n>=4) g.push({t:'runner', n:Math.min(8, 1+Math.floor(n*0.55))});
-  if(n>=5) g.push({t:'tank', n:Math.min(4, Math.floor(n/3))});
-  if(n>=6) g.push({t:'split', n:Math.min(4, Math.floor(n/3))});
-  if(n>=8) g.push({t:'healer', n:Math.min(2, Math.floor(n/5))});
-  if(n>=8 && n%5===0) g.push({t:'boss', n:Math.min(2, 1+Math.floor(n/12))});
-  return g;
-}
-const AFFIX={
- yuling:{name:'御灵·焚',color:'#c9603c'},
- suoyu:{name:'锁御·固',color:'#7c7396'},
- zaowu:{name:'造物·衍',color:'#b07a45'},
- shengling:{name:'生灵·愈',color:'#5f8f5a'},
- xinling:{name:'心灵·惑',color:'#a98cba'},
- kongjian:{name:'空间·跃',color:'#8878ad'}
-};
-const SCALE={hp:1.32,dmg:0.06,spd:0.013};
-
-const S={fearT:0,hp:150,maxhp:150,shield:0,wave:0,skills:[],enemies:[],bolts:[],texts:[],summons:[],rings:[],parts:[],shake:0,stats:{kills:0,dmg:0,heal:0},
- running:false,drafting:false,draftsLeft:0,pending:null,t:0,over:false};
-
-
-/* ---- 音效：WebAudio 现场合成，不依赖外部文件 ---- */
-let AC=null,MG=null,SFXMuted=false,lastHitAt=0;
-function actx(){
-  try{
-    if(!AC){ const C=window.AudioContext||window.webkitAudioContext; if(!C) return null; AC=new C(); MG=AC.createGain(); MG.gain.value=0.26; MG.connect(AC.destination); }
-    if(AC.state==='suspended') AC.resume();
-    return AC;
-  }catch(e){ return null; }
-}
-function tone(f,dur,type,vol,f2,delay){
-  if(SFXMuted) return; const c=actx(); if(!c) return;
-  const t0=c.currentTime+(delay||0);
-  const o=c.createOscillator(), g=c.createGain();
-  o.type=type||'sine'; o.frequency.setValueAtTime(f,t0);
-  if(f2) o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t0+dur);
-  g.gain.setValueAtTime(0.0001,t0);
-  g.gain.exponentialRampToValueAtTime(vol||0.2,t0+0.01);
-  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-  o.connect(g); g.connect(MG); o.start(t0); o.stop(t0+dur+0.03);
-}
-function nz(dur,vol,freq,q,delay){
-  if(SFXMuted) return; const c=actx(); if(!c) return;
-  const n=Math.max(1,Math.floor(c.sampleRate*dur)); const b=c.createBuffer(1,n,c.sampleRate); const d=b.getChannelData(0);
-  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
-  const src=c.createBufferSource(); src.buffer=b;
-  const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=freq||1200; f.Q.value=q||1;
-  const g=c.createGain(); g.gain.value=vol||0.2;
-  src.connect(f); f.connect(g); g.connect(MG);
-  src.start(c.currentTime+(delay||0));
-}
-const SFX={
-  gold(){ tone(940,0.09,'square',0.16,520); nz(0.06,0.12,2600,1.4); },
-  fire(){ nz(0.24,0.3,700,0.7); tone(190,0.22,'sawtooth',0.14,90); },
-  wood(){ tone(520,0.14,'sine',0.16,700); },
-  water(){ tone(660,0.18,'sine',0.15,320); },
-  earth(){ tone(170,0.22,'triangle',0.26,80); nz(0.12,0.18,320,1); },
-  mind(){ tone(880,0.18,'sine',0.13); tone(1320,0.22,'sine',0.09,null,0.06); },
-  space(){ tone(1250,0.16,'square',0.1,300); },
-  lock(){ nz(0.1,0.16,1800,1.5); tone(300,0.14,'triangle',0.12,150); },
-  make(){ tone(420,0.12,'triangle',0.13,560); },
-  beast(){ tone(220,0.18,'sawtooth',0.11,140); },
-  hit(){ const n=performance.now(); if(n-lastHitAt<45) return; lastHitAt=n; nz(0.05,0.09,1500,1); },
-  kill(){ tone(130,0.14,'triangle',0.24,60); nz(0.12,0.14,500,0.9); },
-  heal(){ tone(660,0.16,'sine',0.13); tone(990,0.22,'sine',0.09,null,0.05); },
-  buff(){ tone(520,0.12,'sine',0.11,780); },
-  tick(){ tone(1180,0.05,'square',0.07); },
-  over(){ tone(240,0.6,'sawtooth',0.18,80); },
-  wave(){ tone(440,0.1,'sine',0.11); tone(660,0.12,'sine',0.09,null,0.08); }
-};
-const ECOL={金:'#c9a227',火:'#c9603c',木:'#5f8f5a',水:'#4a7f9c',土:'#a9743f',心灵:'#a98cba',空间:'#8878ad'};
-function sfxCast(elem){
-  const m={金:'gold',火:'fire',木:'wood',水:'water',土:'earth',心灵:'mind',空间:'space'};
-  const k=elem&&m[elem]; if(k&&SFX[k]) SFX[k]();
-}
-
-function rnd(a,b){return a+Math.random()*(b-a)}
-function playerY(){return cvs.clientHeight/2}
-
-function initSkills(playerBase){
-  S.skills=[]; S.locked=[];
-  if(!playerBase) return;
-  S.skills.push({base:playerBase,mods:[],cd:0,stats:null});
-  S.locked=BASE.filter(b=>b.id!==playerBase.id).slice();
-  S.skills.forEach(recalc);
-}
-
-function addSkillBase(b){
-  const sk={base:b,mods:[],cd:0,stats:null}; recalc(sk); S.skills.push(sk); renderSkills();
-  hud('解锁新技能：'+b.name);
-}
-function unlockSkill(){
-  if(S.skills.length>=3 || !S.locked.length) return;
-  const pool=S.locked.slice(), picks=[];
-  for(let i=0;i<2&&pool.length;i++) picks.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
-  if(picks.length===1){ const b=picks[0]; S.locked=S.locked.filter(x=>x.id!==b.id); addSkillBase(b); return; }
-  S.paused=true;
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>多一门</h1><p>最多带三门，从这两门里挑一个。</p><div class="cards" id="pickCards"></div>';
-  const box=panel.querySelector('#pickCards');
-  picks.forEach(b=>{
-    const el=document.createElement('div'); el.className='card';
-    el.innerHTML='<b style="color:'+b.color+'">'+b.name+'</b> <b>'+b.dmg+' 伤害</b><span>'+(b.lane?b.lane+'系 · ':'')+'冷却 '+b.cd+' 秒'+(b.kind==='aoe'?'，范围伤害':'')+'</span>'+(b.note?'<span style="color:#8a6a4a">'+b.note+'</span>':'');
-    el.onclick=()=>{ S.locked=S.locked.filter(x=>x.id!==b.id); addSkillBase(b); overlay.style.display='none'; S.paused=false; };
-    box.appendChild(el);
-  });
-}
-
-function mergeHits(hits){
-  const out=[];
-  for(const h of hits){
-    const c=out.find(o=>o.k===h.k);
-    if(!c){ out.push(Object.assign({},h)); continue; }
-    if(h.k==='slow'){ c.f=Math.min(0.85,(c.f||0)+(h.f||0)); c.dur=Math.max(c.dur||0,h.dur||0); }
-    else if(h.k==='stun'){ c.dur=Math.min(2.5,(c.dur||0)+(h.dur||0)); }
-    else if(h.k==='mark'){ c.dur=(c.dur||0)+(h.dur||0); }
-    else if(h.k==='poison'||h.k==='burn'){ c.dps=(c.dps||0)+(h.dps||0); c.dur=Math.max(c.dur||0,h.dur||0); }
-    else if(h.k==='weak'){ c.f=Math.min(c.f??1,h.f??1); c.dur=Math.max(c.dur||0,h.dur||0); }
+/* 中途退出存档 / 接着玩 */
+(function(){
+  var KEY='wd_run_v1';
+  function saveRun(){
+    try{
+      if(typeof S==='undefined'||!S.running||S.over) return;
+      var d={v:1,wave:S.wave,hp:S.hp,maxhp:S.maxhp,shield:S.shield||0,qi:S.qi||0,combo:S.combo||0,comboT:S.comboT||0,t:S.t||0,
+        stats:S.stats,skills:S.skills.map(function(s){return {id:s.base.id,mods:s.mods.map(function(m){return m.id;})};}),
+        locked:S.locked.map(function(b){return b.id;})};
+      localStorage.setItem(KEY,JSON.stringify(d));
+    }catch(e){}
   }
-  return out;
-}
-function recalc(sk){
-  const b=sk.base;
-  let st={dmg:b.dmg,cd:b.cd,targets:1,crit:0.08,critMult:1.6,onHit:(b.onHit||[]).slice(),heal:0,guardPerWave:0,ctrlDur:0,summonDmg:0,summonCount:0,markDur:0,markBonus:0,healShield:false,killHeal:0,dmgTaken:0,elemBonus:{},healBonus:0,elemAll:0,killHeal:0,rampPerWave:0.03,execute:false,
-          multihit:0,slowDmg:0,highhp:0,bosslayer:0,armorpen:0,chainN:0,splashF:b.kind==='aoe'?0.5:0,
-          burnSpread:false,freezeChance:0,modBonus:0,healWave:0,critHeal:0,shieldStart:0,frenzy:false,dmgBonus:0,cull:false,shielddmg:false,rage:false,deepPoison:false,wuxing:false,sameelem:false,knockBonus:0};
-  if(b.kind==='aoe') st.targets=3;
-  if(b.execute) st.execute=true;
-  for(const m of sk.mods){
-    st.modBonus+=0.06;
-    switch(m.id){
-      case 'cull': st.cull=true;break;
-       case 'shielddmg': st.shielddmg=true;break;
-       case 'rage': st.rage=true;break;
-       case 'deepPoison': st.deepPoison=true;break;
-       case 'dmg50': st.dmgBonus+=0.5;break; case 'dmg25': st.dmgBonus+=0.25;break; case 'cd20': st.cd*=0.8;break; case 'pierce3': st.targets+=3;break; case 'splashup': st.splashF=(st.splashF||0)+0.25;break; case 'ctrlmore': st.ctrlDur+=0.8;break; case 'guardmore': st.guardPerWave+=8;break; case 'elemall': st.elemAll+=0.2;break; case 'healup': st.healBonus+=0.5;break;
-      case 'speed30': st.cd*=0.7;break;
-      case 'pierce': st.targets+=1;break;
-      case 'pierce2': st.targets+=2;break;
-      case 'burn': st.onHit.push({k:'burn',dps:3,dur:3});break;
-      case 'freeze': st.onHit.push({k:'slow',f:0.4,dur:2});break;
-      case 'chain': st.onHit.push({k:'chain',f:0.5});break;
-      case 'chain2': st.chainN+=1;break;
-      case 'lifesteal': st.heal+=0.2;break;
-      case 'crit': st.crit+=0.3;break;
-      case 'critdmg': st.critMult=2.5;break;
-      case 'killheal': st.killHeal+=7;break;
-      case 'knock': if(st.onHit.some(h=>h.k==='knock')) st.knockBonus+=14; else st.onHit.push({k:'knock'});break;
-      case 'poison': st.onHit.push({k:'poison',dps:2,dur:4});break;
-      case 'slowp': st.onHit.push({k:'slow',f:0.15,dur:2});break;
-      case 'stunp': st.onHit.push({k:'stun',dur:0.4});break;
-      case 'markp': st.onHit.push({k:'mark',dur:2}); st.markBonus+=0.15; break;
-      case 'shield': st.shieldOnHit=(st.shieldOnHit||0)+2;break;
-      case 'cdr': st.cd*=0.8;break;
-      case 'cdfast': st.cd*=0.88;break;
-      case 'critup': st.crit+=0.12;break;
-      case 'dmg35': st.dmgBonus+=0.35;break;
-      case 'ctrlplus': st.ctrlDur+=0.6;break;
-      case 'guardplus': st.guardPerWave+=6;break;
-      case 'healplus': st.healWave+=18;break;
-      case 'execute': st.execute=true;break;
-      case 'bounce': st.targets+=1;st.bounceF=0.4;break;
-      case 'splash': st.splashF=Math.max(st.splashF,0.5);break;
-      case 'splashup': st.splashF=(st.splashF||0.3)*1.5;break;
-      case 'ramp': st.rampPerWave+=0.08;break;
-      case 'multihit': st.multihit=0.6;break;
-      case 'slowdmg': st.slowDmg+=0.4;break;
-      case 'highhp': st.highhp+=0.5;break;
-      case 'bosslayer': st.bosslayer+=0.4;break;
-      case 'armorpen': st.armorpen+=0.5;break;
-      case 'burnspread': st.burnSpread=true;break;
-      case 'freezechance': st.freezeChance+=0.2;break;
-      case 'healwave': st.healWave+=12;break;
-      case 'critheal': st.critHeal+=4;break;
-      case 'shieldstart': st.shieldStart+=8;break;
-      case 'frenzy': st.frenzy=true;break;
-      case 'hp30': st.hp30=true;break;
-      case 'wuxing': st.wuxing=true;break;
-      case 'sameelem': st.sameelem=true;break;
-      case 'lane_firm': st.guardPerWave+=6;break;
-      case 'lane_bind': st.ctrlDur+=1;break;
-      case 'craft_power': st.summonDmg+=0.5;break;
-      case 'craft_twin': st.summonCount+=1;break;
-      case 'life_mark': st.markDur+=3;break;
-      case 'life_hunt': st.markBonus+=0.4;break;
-      case 'mind_clean': st.healShield=true;break;
-      case 'space_drain': st.killHeal+=3;break;
-      case 'elem_jia': st.elemBonus['木']=(st.elemBonus['木']||0)+0.3;break;
-      case 'elem_bing': st.elemBonus['火']=(st.elemBonus['火']||0)+0.3;break;
-      case 'elem_wu': st.elemBonus['土']=(st.elemBonus['土']||0)+0.3;break;
-      case 'elem_geng': st.elemBonus['金']=(st.elemBonus['金']||0)+0.3;break;
-      case 'elem_ren': st.elemBonus['水']=(st.elemBonus['水']||0)+0.3;break;
-      case 'space_veil': st.dmgTaken+=0.1;break;
-      case 'lane_urn': st.guardPerWave+=10;break;
-      case 'craft_pack': st.summonCount+=2;break;
-      case 'life_scent': st.markBonus+=0.3;break;
-      case 'mind_calm': st.healBonus+=0.4;break;
-      case 'space_edge': st.dmgTaken+=0.05;break;
-      case 'elem_all': st.elemAll+=0.1;break;
-    }
-  }
-  st.dmg*=(1+st.dmgBonus);
-  st.onHit=mergeHits(st.onHit);
-  sk.stats=st;
-}
+  function clearRun(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+  function readRun(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; } }
+  window.wdSaveRun=saveRun; window.wdClearRun=clearRun;
+  window.addEventListener('beforeunload',saveRun);
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) saveRun(); });
+  document.addEventListener('click',function(e){
+    var id=e.target&&e.target.id;
+    if(id==='again'||id==='again2'||id==='randPick') clearRun();
+  },true);
 
-function renderSkills(){
-  skillsEl.innerHTML='';
-  const mk=(list,host,side)=>{
-    list.forEach((sk,i)=>{
-      const el=document.createElement('div');
-      el.className='sk';
-      const pct=Math.min(1,sk.cd/Math.max(.01,sk.stats.cd));
-      el.innerHTML='<div class="nm" style="color:'+sk.base.color+'">'+sk.base.name+'</div>'+
-        '<div class="mo">'+(sk.mods.map(m=>m.tag).join(' ')||'无词条')+'</div>'+
-        '<div class="cd" style="transform:scaleY('+pct+')"></div>';
-      if(side===0) el.onclick=()=>onSkillClick(i);
-      host.appendChild(el);
+  function resume(){
+    var d=readRun(); if(!d||!d.skills||!d.skills.length) return false;
+    var first=BASE.filter(function(b){return b.id===d.skills[0].id;})[0]||BASE[0];
+    start(first);
+    S.skills=[];
+    d.skills.forEach(function(rec){
+      var b=BASE.filter(function(x){return x.id===rec.id;})[0]||BASE[0];
+      var mods=(rec.mods||[]).map(function(id){return MODS.filter(function(m){return m.id===id;})[0];}).filter(Boolean);
+      var sk={base:b,mods:mods,cd:0,stats:null}; recalc(sk); S.skills.push(sk);
     });
-  };
-  mk(S.skills,skillsEl,0);
-}
-
-function hud(t){hintEl.textContent=t;hintEl.classList.add('on');clearTimeout(hud._t);hud._t=setTimeout(()=>hintEl.classList.remove('on'),1700);}
-
-function onSkillClick(i){
-  if(S.pending==null) return;
-  const mod=S.pending; S.pending=null;
-  S.skills[i].mods.push(mod);
-  if(mod.id==='hp30'){ S.maxhp+=30; S.hp+=30; }
-  recalc(S.skills[i]);
-  hud('「'+mod.name+'」装到了你的'+S.skills[i].base.name);
-  renderSkills();
-  if(S.draftsLeft>0){ S.draftsLeft--; draft(); return; }
-  overlay.style.display='none';
-  S.drafting=false;
-  S.wave++;
-  if(S.wave%3===0 && S.skills.length<3) unlockSkill();
-  waveTxt.textContent='第 '+S.wave+' 波';
-  S.enemies=[]; spawnWave(); S.running=true;
-}
-
-function kill(e){
-  if(e.dead) return;
-  e.dead=true; S.stats.kills++; SFX.kill(); S.shake=Math.max(S.shake,4); for(let i=0;i<7;i++){ S.parts.push({x:e.x,y:e.y,vx:rnd(-70,70),vy:rnd(-80,20),t:0.45,max:0.45,r:rnd(1.5,3.5)}); }
-  if(e.affix==='zaowu' && !e.child){
-    for(let i=0;i<2;i++){
-      S.enemies.push({type:'slime',x:e.x+rnd(-12,12),y:e.y+rnd(-16,16),hp:e.maxhp*0.3,maxhp:e.maxhp*0.3,sp:e.sp*1.1,r:10,dmg:e.dmg*0.7,elem:e.elem,burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0,stunT:0,affix:null,affixT:0,child:true});
-    }
+    S.locked=(d.locked||[]).map(function(id){return BASE.filter(function(b){return b.id===id;})[0];}).filter(Boolean);
+    S.wave=d.wave; S.maxhp=d.maxhp; S.hp=d.hp; S.shield=d.shield||0; S.qi=d.qi||0;
+    S.combo=d.combo||0; S.comboT=d.comboT||0; S.t=d.t||0;
+    S.stats=d.stats||{kills:0,dmg:0,heal:0};
+    S.running=true; S.paused=false; S.drafting=false; S.over=false; S.enemies=[]; S.bolts=[];
+    renderSkills(); overlay.style.display='none'; waveTxt.textContent='第 '+S.wave+' 波'; spawnWave();
+    hud('接着上一局：第 '+S.wave+' 波');
+    return true;
   }
-  { const kh=Math.max(0,...S.skills.map(k=>k.stats.killHeal||0)); if(kh){ S.hp=Math.min(S.maxhp,S.hp+kh); } }
-  if(e.type==='split' && !e.splitDone){
-    for(let k=0;k<2;k++){
-      const t=TYPES.slime;
-      S.enemies.push({type:'slime',x:e.x+rnd(-10,10),y:e.y+rnd(-14,14),hp:t.hp*0.5,maxhp:t.hp*0.5,sp:t.sp,r:t.r,dmg:t.dmg,elem:t.elem,burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0});
-    }
-  }
-  for(const sk of S.skills) if(sk.stats.frenzy) sk.cd=Math.max(0,sk.cd-0.5);
-}
-
-function damage(e,amt,crit){
-  if(e.dead) return;
-  if(e.affix==='suoyu') amt*=0.82;
-  e.hp-=amt; e.hit=0.12; S.stats.dmg+=amt; SFX.hit(); if(crit) S.shake=Math.max(S.shake,3);
-  S.texts.push({x:e.x,y:e.y-e.r-6,v:Math.round(amt),t:0.7,crit:!!crit});
-  if(e.hp<=0) kill(e);
-}
-
-function cast(sk,ox,oy){
-  const st=sk.stats;
-  if(sk.base.elem){ sfxCast(sk.base.elem); S.rings.push({x:typeof ox==='number'?ox:34,y:typeof oy==='number'?oy:playerY(),r:6,max:56,t:0.4,c:ECOL[sk.base.elem]||'#8a7a63'}); }
-  const ramp0=(1+S.wave*st.rampPerWave)*(1+st.modBonus*sk.mods.length);
-  if(sk.base.kind==='buff'){
-    S.shield=Math.min(60,S.shield+25); S.wardT=3; SFX.buff();
-    S.texts.push({x:34,y:playerY()-42,txt:'护身',t:0.9,color:'#8a7f9c'});
-    return;
-  }
-  if(sk.base.kind==='heal'){
-    const want=st.dmg*ramp0*(1+(st.healBonus||0)); const before=S.hp;
-    S.hp=Math.min(S.maxhp,S.hp+want);
-    const real=S.hp-before;
-    if(S.stats) S.stats.heal=(S.stats.heal||0)+real; SFX.heal();
-    if(st.healShield){ const over=want-real; if(over>0) S.shield=Math.min(60,S.shield+over); }
-    S.texts.push({x:34,y:playerY()-30,txt:'+'+Math.round(real),t:0.9,color:'#8fbf8a'});
-    return;
-  }
-  if(sk.base.kind==='summon'){
-    const n=1+st.summonCount;
-    for(let i=0;i<n;i++) S.summons.push({x:ox+16,y:oy+(i-(n-1)/2)*26,dmg:st.dmg*ramp0*(1+st.summonDmg),until:S.t+6,atk:0,r:10,color:sk.base.color});
-    S.texts.push({x:34,y:playerY()-30,txt:'虎',t:0.7,color:'#b07a45'});
-    return;
-  }
-  const alive=S.enemies.filter(e=>!e.dead).sort((a,b)=>a.x-b.x);
-  if(!alive.length) return;
-  const ramp=(1+S.wave*st.rampPerWave)*(1+st.modBonus*sk.mods.length);
-  const targets=alive.slice(0,Math.max(1,st.targets));
-  for(const t of targets){
-    let dmg=st.dmg*ramp;
-    let em=elemMul(sk.base.elem,t.elem);
-    if(st.wuxing && em>1) em*=1.5;
-    if(st.sameelem && sk.base.elem===t.elem) em*=1.5;
-    const eb=st.elemBonus[sk.base.elem]||0; if(eb) em*=1+eb; if(st.elemAll) em*=1+st.elemAll;
-    dmg*=em;
-    if(t.markT>0) dmg*=1+st.markBonus;
-    if(st.dmgTaken) {}
-    if(st.execute && t.hp/t.maxhp<0.3) dmg*=2;
-    if(st.slowDmg && t.slowT>0) dmg*=1+st.slowDmg;
-    if(st.highhp && t.hp/t.maxhp>0.8) dmg*=1+st.highhp;
-    if(st.bosslayer && t.type==='boss') dmg*=1+st.bosslayer;
-    if(st.armorpen && (t.type==='tank'||t.type==='boss')) dmg*=1+st.armorpen;
-    if(st.cull && t.hp/t.maxhp<0.25) dmg*=1.8;
-    if(st.shielddmg && S.shield>0) dmg*=1.2;
-    if(st.rage) dmg*=1+(1-S.hp/S.maxhp)*0.5;
-    if(st.backwater && S.hp/S.maxhp<0.3) dmg*=1.5;
-    if(st.dawn && S.hp>=S.maxhp) dmg*=1.4;
-    if(st.fewskill && S.skills.length<3) dmg*=1.3;
-    if(st.latewave && S.wave>=15) dmg*=1.35;
-    if(st.bosswave && S.wave%5===0) dmg*=1.6;
-    if(st.summoner) dmg*=1+Math.min(0.3,(S.summons||[]).filter(function(z){return z.until>S.t;}).length*0.06);
-    if(sk.base.breakshield && (t.shield||0)>0){ dmg+=(t.shield||0)*0.8; t.shield=(t.shield||0)*0.25; }
-    if(sk.base.detonate && ((t.poi||0)>0 || (t.burn||0)>0)) dmg*=1.6;
-    const crit=Math.random()<st.crit;
-    if(crit) dmg*=st.critMult;
-    damage(t,dmg,crit);
-    if(sk.base.drain){ S.hp=Math.min(S.maxhp,S.hp+dmg*sk.base.drain); }
-    S.bolts.push({x1:ox,y1:oy,x2:t.x,y2:t.y,life:0.16,color:sk.base.color});
-    const spf=st.splashF||sk.base.splashF||0;
-    if(spf){
-      for(const o of alive){ if(o!==t && !o.dead && Math.hypot(o.x-t.x,o.y-t.y)<(spf>0.5?100:70)) damage(o,dmg*spf,false); }
-    }
-    if(st.multihit) damage(t,dmg*st.multihit,false);
-    const fzc=st.freezeChance||sk.base.freezeChance||0;
-    if(fzc && Math.random()<fzc){ t.slowF=1; t.slowT=1; }
-    for(const h of st.onHit){
-      if(h.k==='burn'){
-        t.burn=Math.max(t.burn,h.dps); t.burnT=Math.max(t.burnT,h.dur);
-        if(st.burnSpread){ for(const o of alive){ if(o!==t && Math.hypot(o.x-t.x,o.y-t.y)<60){o.burn=Math.max(o.burn,h.dps*0.5);o.burnT=Math.max(o.burnT,h.dur);} } }
-      }
-      if(h.k==='poison'){ t.poi=Math.min(st.deepPoison?6:3,(t.poi||0)+1); t.poiT=h.dur; t.poiDps=h.dps; }
-      if(h.k==='slow'){ t.slowF=Math.max(t.slowF||0,h.f); t.slowT=Math.max(t.slowT||0,h.dur+st.ctrlDur); }
-      if(h.k==='mark'){ t.markT=Math.max(t.markT||0,h.dur+st.markDur); }
-      if(h.k==='weak'){ t.weakF=h.f; t.weakT=Math.max(t.weakT||0,h.dur+st.ctrlDur); }
-      if(h.k==='knock'){ t.x+=18+(st.knockBonus||0); }
-      if(h.k==='stun'){ t.stunT=Math.max(t.stunT||0,h.dur); }
-      if(h.k==='charm'){ t.charmT=Math.max(t.charmT||0,h.dur); }
-      if(h.k==='echo'){ t.echoT=h.dur; t.echoMul=h.mul||0.6; t.echoDmg=dmg*(h.mul||0.6); }
-      if(h.k==='chain'){
-        let jumps=1+st.chainN, cur=t;
-        for(let j=0;j<jumps;j++){
-          const c=alive.find(e=>e!==cur && !e.dead);
-          if(!c) break;
-          damage(c,dmg*h.f,false); cur=c;
-        }
-      }
-    }
-    if(st.heal) S.hp=Math.min(S.maxhp,S.hp+dmg*st.heal);
-    if(st.shieldOnHit) S.shield=Math.min(30,S.shield+st.shieldOnHit);
-    if(crit && st.critHeal) S.hp=Math.min(S.maxhp,S.hp+st.critHeal);
-    if(t.dead && st.killHeal) S.hp=Math.min(S.maxhp,S.hp+st.killHeal);
-  }
-}
-
-function spawnWave(){
-  const w=waveComp(S.wave);
-  const over=Math.max(0,S.wave-25);
-  const hpScale=Math.pow(SCALE.hp,S.wave-1)*Math.pow(1.06,over);
-  let i=0;
-  for(const g of w){
-    const t=TYPES[g.t]; const FIVE=['金','木','水','火','土'];
-    for(let k=0;k<g.n;k++){
-      S.enemies.push({type:g.t,elem:FIVE[Math.floor(Math.random()*5)],x:cvs.clientWidth*0.72+(i%4)*46+rnd(-5,5),y:rnd(55,Math.max(90,cvs.clientHeight-55)),
-        hp:t.hp*hpScale*1.05,maxhp:t.hp*hpScale*1.05,sp:t.sp*(1+Math.min(0.5,SCALE.spd*(S.wave-1))),r:t.r,
-        dmg:t.dmg*1.05*(1+SCALE.dmg*(S.wave-1))*(1+0.03*over),
-        burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0,stunT:0,affix:null,affixT:1.2});
-      i++;
-    }
-  }
-  if(S.wave>=12){
-    const list=Object.keys(AFFIX);
-    for(const e of S.enemies){
-      if(e.type==='split'||Math.random()>Math.max(0.25,0.5-0.01*over)) continue;
-      e.affix=list[Math.floor(Math.random()*list.length)];
-      if(e.affix==='suoyu'){ e.hp*=1.15; e.maxhp*=1.15; }
-    }
-  }
-  let sh=0, gd=0;
-  for(const sk of S.skills){ sh+=sk.stats.shieldStart; gd+=sk.stats.guardPerWave; }
-  if(sh) S.shield=Math.min(40,S.shield+sh);
-  if(gd) S.shield=Math.min(40,S.shield+gd);
-}
-
-let last=performance.now();
-function loop(now){
-  const dt=Math.min(0.05,(now-last)/1000); last=now;
-  if(S.running && !S.drafting && !S.over) step(dt);
-  draw();
-  requestAnimationFrame(loop);
-}
-
-function step(dt){
-  if(S.paused) return;
-  S.t+=dt;
-  if(S.shake>0){ S.shake=Math.max(0,S.shake-dt*26); cvs.style.transform=S.shake>0.2?('translate('+rnd(-S.shake,S.shake).toFixed(1)+'px,'+rnd(-S.shake,S.shake).toFixed(1)+'px)'):''; }
-  if(S.rings&&S.rings.length){ for(const r of S.rings){ r.t-=dt; r.r+=(r.max-r.r)*Math.min(1,dt*9); } S.rings=S.rings.filter(r=>r.t>0); }
-  if(S.parts&&S.parts.length){ for(const q of S.parts){ q.t-=dt; q.x+=q.vx*dt; q.y+=q.vy*dt; q.vy+=150*dt; } S.parts=S.parts.filter(q=>q.t>0); }
-  if(S.fearT>0) S.fearT-=dt;
-  if(S.wardT>0) S.wardT-=dt;
-  const py=playerY();
-  const mit=Math.max(0,...S.skills.map(k=>1-(k.stats.dmgTaken||0)))*(S.wardT>0?0.7:1);
-  for(const sk of S.skills){ sk.cd=Math.max(0,sk.cd-dt); if(sk.cd<=0){ cast(sk,34,py); sk.cd=sk.stats.cd; } }
-  for(const e of S.enemies){
-    if(e.markT>0) e.markT-=dt;
-    if(e.weakT>0) e.weakT-=dt;
-  }
-  for(const sm of S.summons){
-    if(S.t>sm.until){ sm.dead=true; continue; }
-    sm.atk-=dt;
-    if(sm.atk<=0){
-      const tgt=S.enemies.filter(e=>!e.dead).sort((a,b)=>a.x-b.x)[0];
-      if(tgt){ damage(tgt,sm.dmg,false); S.bolts.push({x1:sm.x,y1:sm.y,x2:tgt.x,y2:tgt.y,life:0.12,color:sm.color}); sm.atk=0.8; }
-    }
-  }
-  S.summons=S.summons.filter(x=>!x.dead);
-  for(const e of S.enemies){
-    if(e.dead) continue;
-    if(e.affix==='shengling') e.hp=Math.min(e.maxhp,e.hp+e.maxhp*0.012*dt);
-    if(e.affix==='kongjian'){ e.affixT-=dt; if(e.affixT<=0){ e.x-=30; e.affixT=1.8; } }
-    if(e.burnT>0){ e.burnT-=dt; e.hp-=e.burn*dt; if(e.hp<=0){kill(e);continue;} }
-    if(e.poiT>0){ e.poiT-=dt; e.hp-=e.poiDps*(e.poi||1)*dt; if(e.hp<=0){kill(e);continue;} }
-    if(e.type==='healer'){ for(const o of S.enemies){ if(o!==e && !o.dead && Math.hypot(o.x-e.x,o.y-e.y)<120) o.hp=Math.min(o.maxhp,o.hp+7*dt); } }
-    if(e.slowT>0) e.slowT-=dt;
-    if(e.echoT>0){ e.echoT-=dt; if(e.echoT<=0 && !e.dead) damage(e,e.echoDmg||0,false); }
-    if(e.charmT>0){ e.charmT-=dt; e.x+=e.sp*0.8*dt; continue; }
-    if(e.stunT>0){ e.stunT-=dt; continue; }
-    const slow=e.slowT>0?(1-e.slowF):1;
-    e.x-=e.sp*slow*dt;
-    e.hit=Math.max(0,e.hit-dt);
-    if(e.x<54){
-      const xm=(e.affix==='yuling'?1.35:1)*(1+(S.fearT>0?0.2:0));
-      S.hp-=e.dmg*xm*(e.weakT>0?e.weakF:1)*mit*dt;
-      if(e.affix==='xinling') S.fearT=3;
-      e.x=54;
-    }
-  }
-  for(const t of S.texts) t.t-=dt;
-  S.texts=S.texts.filter(t=>t.t>0);
-  for(const b of S.bolts) b.life-=dt;
-  S.bolts=S.bolts.filter(b=>b.life>0);
-  S.enemies=S.enemies.filter(e=>!e.dead);
-  if(S.shield>0) S.shield=Math.max(0,S.shield-6*dt);
-  if(S.hp<=0){ S.hp=0; gameOver(); }
-  if(S.over) return;
-  if(!S.enemies.length && !S.drafting) waveClear();
-  hpBar.style.width=(S.hp/S.maxhp*100)+'%';
-  hpTxt.textContent=Math.ceil(S.hp);
-  shieldTxt.textContent=S.shield>0?('护盾 '+Math.floor(S.shield)):'';
-  const upd=(host,list)=>{[...host.children].forEach((el,i)=>{const sk=list[i];if(!sk)return;el.querySelector('.cd').style.transform='scaleY('+Math.min(1,sk.cd/Math.max(.01,sk.stats.cd))+')';});};
-  upd(skillsEl,S.skills);
-}
-
-function openStats(){
-  S.paused=true;
-  const t=Math.max(1,S.t), dps=Math.round(S.stats.dmg/t);
-  const mm=Math.floor(S.t/60), ss=String(Math.floor(S.t%60)).padStart(2,'0');
-  let h='<h1>数据</h1><p>第 '+S.wave+' 波 · 存活 '+mm+':'+ss+'</p>';
-  h+='<div style="font-size:13px;line-height:1.9;color:#4a3d2f">';
-  h+='HP '+Math.ceil(S.hp)+' / '+S.maxhp+(S.shield>0?' · 护盾 '+Math.floor(S.shield):'')+'<br>';
-  h+='场上敌人 '+S.enemies.length+' · 击杀 '+S.stats.kills+'<br>';
-  h+='总伤害 '+Math.round(S.stats.dmg)+' · 均伤 '+dps+'/秒<br>';
-  h+='回复 '+(S.stats.heal||0).toFixed(0)+' · 均回 '+(S.stats.heal?((S.stats.heal/Math.max(1,S.t))*1).toFixed(1):'0')+'/秒<br>';
-  h+='词条池 '+MODS.length+' 条 · 已装 '+S.skills.reduce((a,s)=>a+s.mods.length,0)+' 条';
-  h+='</div><hr style="border-color:#d8cbb2;margin:10px 0">';
-  for(const sk of S.skills){
-    const st=sk.stats, real=st.dmg*(1+S.wave*st.rampPerWave);
-    h+='<div style="font-size:13px;line-height:1.9;margin-bottom:8px">';
-    const pick=sk.base.kind==='heal'?('回血约 '+Math.round(real*(1+(st.healBonus||0)))):(sk.base.kind==='summon'?('召唤伤害约 '+Math.round(real*(1+st.summonDmg))):('每击约 '+Math.round(real)+' · 目标 '+st.targets+' · 暴击 '+Math.round(st.crit*100)+'%'));
-    h+='<b style="color:'+sk.base.color+'">'+sk.base.name+'</b>（'+sk.base.elem+'） · '+pick+' · 冷却 '+st.cd.toFixed(2)+'s';
-    h+='<br><span style="color:#7a6a56">词条：'+(sk.mods.map(m=>m.name).join('、')||'无')+'</span>';
-    h+='</div>';
-  }
-  panel.innerHTML=h+'<button class="btn" id="closeStats">关掉</button>';
-  overlay.style.display='flex';
-  panel.querySelector('#closeStats').onclick=()=>{ overlay.style.display='none'; S.paused=false; };
-}
-
-const INKCOL={slime:'#8fae7f',runner:'#c9a86a',tank:'#8a7fa0',split:'#c98f8f',healer:'#7fae9f',boss:'#b58a5a'};
-function draw(){
-  const W=cvs.clientWidth,H=cvs.clientHeight;
-  // ---- 水墨背景 ----
-  const g=ctx.createLinearGradient(0,0,0,H);
-  g.addColorStop(0,'#f4efe2');g.addColorStop(.55,'#ede4d1');g.addColorStop(1,'#e3d7c0');
-  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // 远山
-  ctx.save();
-  const far=(mh,col,yo)=>{
-    ctx.beginPath();ctx.moveTo(0,H*yo);
-    const n=7;
-    for(let i=0;i<=n;i++){
-      const x=W*i/n, y=H*yo-mh*(0.35+0.65*Math.abs(Math.sin(i*1.7+0.6)));
-      ctx.quadraticCurveTo(x-W/n*0.5,H*yo-mh*0.3,x,y);
-    }
-    ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
-    ctx.fillStyle=col;ctx.fill();
-  };
-  far(H*0.16,'rgba(122,108,86,.13)',0.42);
-  far(H*0.12,'rgba(96,84,64,.10)',0.52);
-  // 月
-  ctx.globalAlpha=.5;ctx.fillStyle='#f7f1e2';ctx.beginPath();ctx.arc(W*0.78,H*0.13,26,0,7);ctx.fill();
-  ctx.globalAlpha=1;
-  // 竹影（右）
-  const bamboo=(x0,w,col)=>{
-    ctx.strokeStyle=col;ctx.lineWidth=w;
-    for(let k=0;k<3;k++){
-      const x=x0+k*9;
-      ctx.beginPath();ctx.moveTo(x,H*0.15);ctx.quadraticCurveTo(x-6,H*0.55,x-2,H*1.02);ctx.stroke();
-      for(let j=1;j<7;j++){
-        const yy=H*(0.2+j*0.11);
-        ctx.lineWidth=Math.max(1,w-1);ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x+16-j*1.5,yy-9);ctx.stroke();
-      }
-    }
-  };
-  bamboo(W-4,3,'rgba(58,92,62,.16)');
-  // 墨点
-  const seed=(n)=>Math.abs(Math.sin(n*127.1)*43758.5453)%1;
-  ctx.fillStyle='rgba(40,34,26,.05)';
-  for(let i=0;i<26;i++){
-    const x=seed(i+1)*W, y=seed(i+11)*H, r=2+seed(i+21)*7;
-    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
-  }
-  // 地面淡墨
-  ctx.fillStyle='rgba(110,92,66,.07)';ctx.fillRect(0,H*0.86,W,H*0.14);
-  ctx.restore();
-  const px=34,py=playerY();
-  const orb=(y,color,label)=>{
-    ctx.save();ctx.shadowColor=color;ctx.shadowBlur=16;ctx.fillStyle=color;
-    ctx.beginPath();ctx.arc(px,y,14,0,7);ctx.fill();ctx.restore();
-    ctx.fillStyle='#04121c';ctx.font='bold 11px sans-serif';ctx.fillText(label,px-6,y+4);
-  };
-  ctx.save();
-  ctx.fillStyle='#1b1b1b';ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;
-  ctx.beginPath();ctx.arc(px,py,15,0,7);ctx.fill();
-  ctx.beginPath();ctx.moveTo(px-12,py-9);ctx.lineTo(px-18,py-24);ctx.lineTo(px-3,py-14);ctx.closePath();ctx.fill();
-  ctx.beginPath();ctx.moveTo(px+12,py-9);ctx.lineTo(px+18,py-24);ctx.lineTo(px+3,py-14);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px-5,py-1,3.4,0,7);ctx.fill();ctx.beginPath();ctx.arc(px+5,py-1,3.4,0,7);ctx.fill();
-  ctx.fillStyle='#1b1b1b';ctx.beginPath();ctx.arc(px-5,py-1,1.5,0,7);ctx.fill();ctx.beginPath();ctx.arc(px+5,py-1,1.5,0,7);ctx.fill();
-  // 胡须
-  ctx.strokeStyle='#1b1b1b';ctx.lineWidth=1.2;
-  ctx.beginPath();ctx.moveTo(px-7,py+5);ctx.lineTo(px-17,py+2);ctx.moveTo(px-7,py+7);ctx.lineTo(px-17,py+9);
-  ctx.moveTo(px+7,py+5);ctx.lineTo(px+17,py+2);ctx.moveTo(px+7,py+7);ctx.lineTo(px+17,py+9);ctx.stroke();
-  // 尾巴
-  ctx.beginPath();ctx.moveTo(px-13,py+10);ctx.quadraticCurveTo(px-26,py+16,px-20,py+30);ctx.lineWidth=4;ctx.stroke();
-  ctx.restore();
-  for(const sm of S.summons){ ctx.save();ctx.fillStyle=sm.color||'#b07a45';ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sm.x,sm.y,sm.r,0,7);ctx.fill();ctx.stroke();ctx.restore(); }
-  for(const e of S.enemies){
-    ctx.save();
-    ctx.fillStyle=e.hit>0?'#fff':(INKCOL[e.type]||'#9a8f7a');
-    ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,7);ctx.fill();
-    ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;ctx.stroke();
-    // 眼睛与表情
-    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(e.x-e.r*0.32,e.y-e.r*0.12,e.r*0.22,0,7);ctx.fill();ctx.beginPath();ctx.arc(e.x+e.r*0.32,e.y-e.r*0.12,e.r*0.22,0,7);ctx.fill();
-    ctx.fillStyle='#1b1b1b';ctx.beginPath();ctx.arc(e.x-e.r*0.3,e.y-e.r*0.1,e.r*0.1,0,7);ctx.fill();ctx.beginPath();ctx.arc(e.x+e.r*0.34,e.y-e.r*0.1,e.r*0.1,0,7);ctx.fill();
-    ctx.strokeStyle='#1b1b1b';ctx.lineWidth=1.6;ctx.beginPath();
-    if(e.type==='healer'){ctx.moveTo(e.x-4,e.y+e.r*0.35);ctx.lineTo(e.x+4,e.y+e.r*0.35);}
-    else{ctx.arc(e.x,e.y+e.r*0.18,e.r*0.28,0.15*Math.PI,0.85*Math.PI);}
-    ctx.stroke();
-    if(e.type==='boss'){ctx.fillStyle='#c25e2a';ctx.beginPath();ctx.moveTo(e.x-10,e.y-e.r-6);ctx.lineTo(e.x-4,e.y-e.r+2);ctx.lineTo(e.x,e.y-e.r-8);ctx.lineTo(e.x+4,e.y-e.r+2);ctx.lineTo(e.x+10,e.y-e.r-6);ctx.closePath();ctx.fill();}
-    if(e.type==='tank'){ctx.strokeStyle='#5b4a8a';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y,e.r-4,0,7);ctx.stroke();}
-    if(e.markT>0){const a=0.45+0.35*Math.sin(S.t*8);ctx.save();ctx.strokeStyle='rgba(95,143,90,'+a.toFixed(2)+')';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(e.x,e.y,e.r+5,0,7);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#5f8f5a';ctx.beginPath();ctx.arc(e.x,e.y-e.r-14,3,0,7);ctx.fill();ctx.restore();}
-    ctx.restore();
-    const bw=e.r*2;
-    ctx.fillStyle='#2a3644';ctx.fillRect(e.x-e.r,e.y-e.r-9,bw,4);
-    ctx.fillStyle='#ff6b6b';ctx.fillRect(e.x-e.r,e.y-e.r-9,bw*Math.max(0,e.hp/e.maxhp),4);
-    ctx.font='bold 12px sans-serif';
-    const ew=ctx.measureText(e.elem||'').width;
-    ctx.fillStyle='rgba(4,18,28,.78)';ctx.fillRect(e.x-e.r-2,e.y-e.r-18,ew+8,15);
-    ctx.fillStyle=EC[e.elem]||'#9fb3c8';ctx.fillText(e.elem,e.x-e.r+2,e.y-e.r-7);
-    if(e.affix){ const af=AFFIX[e.affix]; ctx.font='bold 11px sans-serif'; const aw=ctx.measureText(af.name).width;
-      ctx.fillStyle='rgba(250,246,236,.9)'; ctx.fillRect(e.x-e.r-2,e.y-e.r-34,aw+8,14);
-      ctx.fillStyle=af.color; ctx.fillText(af.name,e.x-e.r+2,e.y-e.r-23); }
-    if(e.burnT>0){ctx.fillStyle='#ff8a5c';ctx.beginPath();ctx.arc(e.x+e.r*0.7,e.y-e.r*0.6,3,0,7);ctx.fill();}
-    if(e.poiT>0){ctx.fillStyle='#7ce37c';ctx.beginPath();ctx.arc(e.x-e.r*0.7,e.y-e.r*0.6,3,0,7);ctx.fill();}
-    if(e.slowT>0){ctx.strokeStyle='#8ff0e0';ctx.beginPath();ctx.arc(e.x,e.y,e.r+3,0,7);ctx.stroke();}
-    if(e.type==='healer'){ctx.strokeStyle='#8ff0e0';ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(e.x,e.y,e.r+12,0,7);ctx.stroke();ctx.globalAlpha=1;}
-  }
-  for(const b of S.bolts){ctx.strokeStyle=b.color;ctx.globalAlpha=Math.min(1,b.life/0.16);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(b.x1,b.y1);ctx.lineTo(b.x2,b.y2);ctx.stroke();ctx.globalAlpha=1;}
-  for(const t of S.texts){ctx.globalAlpha=Math.min(1,t.t/0.7);ctx.fillStyle=t.crit?'#ffd166':'#e6edf3';ctx.font=(t.crit?'bold 16px':'13px')+' sans-serif';ctx.fillText(t.v,t.x-8,t.y-(0.7-t.t)*30);}
-  ctx.globalAlpha=1;
-  for(const r of (S.rings||[])){ ctx.globalAlpha=Math.max(0,r.t/0.4)*0.85; ctx.strokeStyle=r.c||'#8a7a63'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.stroke(); }
-  for(const q of (S.parts||[])){ ctx.globalAlpha=Math.max(0,q.t/q.max); ctx.fillStyle='#6b5c45'; ctx.beginPath(); ctx.arc(q.x,q.y,q.r,0,Math.PI*2); ctx.fill(); }
-  ctx.globalAlpha=1;
-}
-
-function waveClear(){
-  SFX.wave();
-  if(S.drafting) return;
-  let heal=0; for(const sk of S.skills) heal+=sk.stats.healWave;
-  if(heal) S.hp=Math.min(S.maxhp,S.hp+heal);
-  S.running=false; S.drafting=true; S.draftsLeft=1; draft();
-}
-
-function draft(){
-  SFX.tick();
-  const recent=S.recent||[];
-  let cand=MODS.filter(m=>recent.indexOf(m.id)<0);
-  if(cand.length<8) cand=MODS.slice();
-  const pool=cand.slice().sort(()=>Math.random()-0.5).slice(0,4);
-  window.__pool=pool;
-  S.recent=recent.concat(pool.map(m=>m.id)).slice(-10);
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>你挑一条</h1><p>挑一条，装到你身上的技能上。</p><div class="cards" id="cards"></div>';
-  const c=panel.querySelector('#cards');
-  pool.forEach(m=>{
-    const el=document.createElement('div');el.className='card';
-    el.innerHTML='<b>'+m.name+'</b><span>'+m.desc+'</span>';
-    el.onclick=()=>{
-      S.pending=m; overlay.style.display='none';
-      hud('点你的一个技能，装上「'+m.name+'」');
-      [...skillsEl.children].forEach(el=>el.classList.add('pick'));
-    };
-    c.appendChild(el);
+  window.wdResume=resume;
+  var obs=new MutationObserver(function(){
+    if(!panel) return;
+    var h=panel.querySelector('h1');
+    if(!h||h.textContent.indexOf('挑一个起手')<0) return;
+    if(document.getElementById('resumeRun')) return;
+    var d=readRun(); if(!d||!d.wave) return;
+    var b=document.createElement('button');
+    b.id='resumeRun'; b.className='btn';
+    b.style.cssText='width:100%;margin:6px 0 2px;padding:10px;background:#c9603c;color:#fff';
+    b.textContent='继续上一局（第 '+d.wave+' 波）';
+    b.onclick=function(){ if(resume()) clearRun(); };
+    var cards=panel.querySelector('#pickCards');
+    panel.insertBefore(b, cards||null);
   });
-}
-
-function gameOver(){
-  if(S.over) return;
-  SFX.over();
-  S.running=false;S.over=true; wdRecord(); try{window.wdSubmitGameOver&&window.wdSubmitGameOver(S.wave);}catch(e){} S.paused=true;S.drafting=false;S.enemies=[];S.bolts=[];
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>倒了</h1><p>撑到第 '+S.wave+' 波。这一局到这儿。</p>'
-   +'<button class="btn" id="again" style="background:#c9603c;color:#fff">再来一局</button>'
-   +'<button class="btn" id="quit" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">退出</button>';
-  panel.querySelector('#again').onclick=()=>{ overlay.style.display='none'; pickSkill(); };
-  panel.querySelector('#quit').onclick=()=>{
-    panel.innerHTML='<h1>这一局到这儿</h1><p>可以关掉这个页面了。</p>'
-      +'<button class="btn" id="again2" style="background:#c9603c;color:#fff">再开一局</button>';
-    panel.querySelector('#again2').onclick=()=>{ overlay.style.display='none'; pickSkill(); };
-    try{ window.close(); }catch(e){}
-  };
-}
-function win(){
-  S.running=false;S.over=true;
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>过了</h1><p>这局清完了。</p><button class="btn" id="again">再玩一局</button>';
-  panel.querySelector('#again').onclick=start;
-}
-
-function start(playerBase){
-  Object.assign(S,{hp:150,maxhp:150,shield:0,wave:1,enemies:[],bolts:[],texts:[],running:true,paused:false,drafting:false,draftsLeft:0,pending:null,t:0,over:false,stats:{kills:0,dmg:0,heal:0}});
-  S.rings=[];S.parts=[];S.shake=0;cvs.style.transform='';actx();
-  initSkills(playerBase); renderSkills();
-  overlay.style.display='none';
-  waveTxt.textContent='第 1 波';
-  S.enemies=[]; spawnWave();
-}
-
-function pickSkill(){
-  overlay.style.display='flex';
-  let html='<h1>挑一个起手</h1>'+wdBestLine()+'<p>开局只带一门，之后每三波多解锁一门。</p><button id="randPick" style="width:100%;margin:8px 0 4px;padding:9px;border:1px solid #d8cbb2;border-radius:9px;background:#e9dfc9;color:#2b241c;font-size:14px">随便来一门</button><div class="cards" id="pickCards"></div>';
-  panel.innerHTML=html;
-  const c=panel.querySelector('#pickCards');
-  const rp=document.getElementById('randPick');
-  if(rp) rp.onclick=()=>start(BASE[Math.floor(Math.random()*BASE.length)]);
-  const pick=BASE.slice().sort(()=>Math.random()-0.5).slice(0,5);
-  pick.forEach(b=>{
-    const el=document.createElement('div'); el.className='card';
-    el.innerHTML='<b style="color:'+b.color+'">'+b.name+'</b> <b>'+b.dmg+' 伤害</b><span>'+(b.lane?b.lane+'系 · ':'')+'冷却 '+b.cd+' 秒'+(b.kind==='aoe'?'，范围伤害':'')+'</span>'+(b.note?'<span style="color:#8a6a4a">'+b.note+'</span>':'');
-    el.onclick=()=>start(b);
-    c.appendChild(el);
-  });
-}
-
-function intro(){
-  overlay.style.display='flex';
-  panel.innerHTML='<h1>灵质空间 · 六大系</h1><p>你是刚凝出灵识的妖精。开局一门灵质能力，无限波，越往后越狠。<br><br>每清一波捡一条灵质碎片，装到技能上；每三波多解锁一门能力。金木水火土相克：克制打 1.5 倍，被克只吃 0.75。右上角「数据」能看每一击的伤害和装了什么。</p><button class="btn" id="go">开打</button>';
-  panel.querySelector('#go').onclick=()=>{resize();pickSkill();};
-}
-
-function resize(){
-  const r=cvs.getBoundingClientRect();
-  cvs.width=Math.round(r.width*devicePixelRatio);
-  cvs.height=Math.round(r.height*devicePixelRatio);
-  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-}
-window.addEventListener('resize',resize);
-
-resize(); initSkills(null); renderSkills(); intro(); requestAnimationFrame(loop);
-</script>
-
-<script>
-(function(){
-  var SSO='https://sso.umrc.cn', CID='client_76bb309d53fc66a3';
-  var REDIRECT="https://starlit-panda-37ecfa.netlify.app";
-  function b64u(buf){var b='';var a=new Uint8Array(buf);for(var i=0;i<a.length;i++)b+=String.fromCharCode(a[i]);return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-  function rnd(n){return b64u(crypto.getRandomValues(new Uint8Array(n)));}
-  function b64d(t){var s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));var out='';for(var i=0;i<s.length;i++){out+='%'+('00'+s.charCodeAt(i).toString(16)).slice(-2);}return decodeURIComponent(out);}
-  function hint(t){var h=document.getElementById('hint');if(!h)return;h.textContent=t;h.classList.add('on');setTimeout(function(){h.classList.remove('on');},4200);}
-  function user(){try{return JSON.parse(localStorage.getItem('wd_user')||'null');}catch(e){return null;}}
-  function paint(){var b=document.getElementById('authBtn');if(!b)return;var u=user();b.textContent=u?u.name:'登录';b.title=u?('已登录：'+u.name+'，点此退出'):'用 SSO 登录，进度绑定账号';}
-  function login(){
-    var v=rnd(48), s=rnd(16);
-    crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(function(d){
-      var ch=b64u(d);
-      sessionStorage.setItem('pkce',JSON.stringify({v:v,s:s}));
-      var q=new URLSearchParams({response_type:'code',client_id:CID,redirect_uri:REDIRECT,scope:'openid profile',state:s,code_challenge:ch,code_challenge_method:'S256'});
-      location.href=SSO+'/authorize.php?'+q.toString();
-    });
-  }
-  function finish(){
-    var q=new URLSearchParams(location.search), code=q.get('code');
-    if(!code) return;
-    var st=q.get('state'), pk=null;
-    try{pk=JSON.parse(sessionStorage.getItem('pkce')||'null');}catch(e){}
-    history.replaceState(null,'',location.pathname);
-    if(!pk||pk.s!==st){hint('登录校验失败，再试一次');return;}
-    var body=new URLSearchParams({grant_type:'authorization_code',code:code,redirect_uri:REDIRECT,client_id:CID,code_verifier:pk.v});
-    fetch(SSO+'/token.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
-      .then(function(r){return r.json();})
-      .then(function(j){
-        if(!j.id_token) throw new Error(j.error_description||j.error||'换取令牌失败');
-        var p=JSON.parse(b64d(j.id_token.split('.')[1]));
-        var u={sub:p.sub,name:p.name||p.nickname||p.preferred_username||p.sub};
-        localStorage.setItem('wd_user',JSON.stringify(u));
-        sessionStorage.removeItem('pkce'); paint(); hint('登录成功：'+u.name);
-      })
-      .catch(function(e){hint('登录失败：'+e.message);});
-  }
-  window.addEventListener('DOMContentLoaded',function(){
-    var b=document.getElementById('authBtn');
-    if(b) b.onclick=function(){ if(user()){localStorage.removeItem('wd_user');paint();hint('已退出登录');} else login(); };
-    paint(); finish();
-  });
-})();
-
-</script>
-<script>
-/* ---- 视觉与机制扩展（v2）：灵息、领域、连斩 ---- */
-(function(){
-  const qiBar=document.getElementById('qiBar'), comboTxt=document.getElementById('comboTxt'), domainBtn=document.getElementById('domainBtn');
-  const NEW_SKILLS=[
-    {id:'frost',name:'御灵·霜',elem:'水',lane:'御灵',dmg:12,cd:1.7,color:'#7fb2d6',note:'落霜成刃，减速四成五',onHit:[{k:'slow',f:.45,dur:2.2}]},
-    {id:'sealroot',name:'锁御·镇',elem:'',lane:'锁御',dmg:7,cd:3.6,aoe:true,color:'#7c7396',note:'镇住一片，定身一秒半、削敌一档',onHit:[{k:'stun',dur:1.5},{k:'weak',f:.8,dur:4}]},
-    {id:'plume',name:'造物·翎',elem:'',lane:'造物',dmg:9,cd:5.2,kind:'summon',color:'#b07a45',note:'召一只翎羽灵，替你打六秒'},
-    {id:'rift2',name:'空间·隙',elem:'',lane:'空间',dmg:26,cd:3.2,color:'#8878ad',note:'撕开裂隙，被标的目标吃更多伤害',onHit:[{k:'mark',dur:4}]},
-    {id:'devour',name:'生灵·噬',elem:'',lane:'生灵',dmg:14,cd:3.0,color:'#5f8f5a',note:'咬住回血，伤害的三成补给自己',drain:0.35},
-    {id:'breakseal',name:'锁御·破',elem:'',lane:'锁御',dmg:15,cd:3.4,color:'#7c7396',note:'专砸护盾，顺手把盾削掉',breakshield:1},
-    {id:'blast',name:'御灵·爆',elem:'火',lane:'御灵',dmg:11,cd:2.2,color:'#c9603c',note:'目标身上有毒或灼烧就炸一下',detonate:1}
-  ];
-  BASE.push(...NEW_SKILLS);
-  S.qi=0; S.combo=0; S.comboT=0;
-  const _kill=kill;
-  kill=function(e){
-    const deadBefore=e.dead;
-    _kill(e);
-    if(!deadBefore){ S.qi=Math.min(100,(S.qi||0)+9); S.combo=(S.combo||0)+1; S.comboT=3.2; }
-  };
-  const _damage=damage;
-  damage=function(e,amt,crit){
-    const mult=1+Math.min(0.6,(S.combo||0)*0.012);
-    return _damage(e,amt*mult,crit);
-  };
-  function domain(){
-    if((S.qi||0)<100 || S.paused || S.over) return;
-    S.qi=0;
-    for(const e of S.enemies){ if(!e.dead){ damage(e, 60+18*S.wave, false); e.slowT=3; e.slowF=Math.max(e.slowF||0,.6); } }
-    S.shake=Math.max(S.shake||0,7); S.rings.push({x:cvs.clientWidth/2,y:cvs.clientHeight/2,r:10,t:0,life:.9,c:'#8c3a2a'});
-    try{ SFX.kill(); }catch(_){}
-  }
-  domainBtn.onclick=domain;
-  const _draw=draw;
-  draw=function(){
-    _draw();
-    if(S.comboT>0){ S.comboT-=1/60; if(S.comboT<=0){ S.combo=0; } }
-    qiBar.style.width=((S.qi||0))+'%';
-    domainBtn.classList.toggle('off',(S.qi||0)<100);
-    comboTxt.textContent=(S.combo>1?('连斩 ×'+S.combo):'');
-  };
-
-  // ---- 新词条（v3）：在 recalc 后二次加工 ----
-  const NEW_MODS=[
-    {id:'m_crit2',name:'御灵·锐',desc:'暴击率再 +10%',tag:'暴击+10%'},
-    {id:'m_dmg20',name:'御灵·沉',desc:'这个技能伤害 +20%',tag:'伤害+20%'},
-    {id:'m_cd8',name:'锁御·省',desc:'冷却 -8%',tag:'冷却-8%'},
-    {id:'m_hp',name:'生灵·强',desc:'生命上限 +25，立刻回复',tag:'生命+25'},
-    {id:'m_elem',name:'御灵·通',desc:'五行克制加成再 +25%',tag:'克制+25%'},
-    {id:'m_guard',name:'锁御·垒',desc:'每波开始多 8 点护盾',tag:'护盾+8'},
-    {id:'m_heal2',name:'心灵·润',desc:'回血量 +30%',tag:'回血+30%'},
-    {id:'m_critdmg',name:'御灵·烈',desc:'暴击伤害 +0.4',tag:'暴伤+0.4'}
-  ];
-  MODS.push(...NEW_MODS);
-  const _recalc=recalc;
-  recalc=function(sk){
-    _recalc(sk); const st=sk.stats;
-    // 同系共鸣：词条名以技能所属系开头者，每条 +8% 伤害，最多三条
-    { const lane=sk.base&&sk.base.lane||'';
-      let same=0;
-      (sk.mods||[]).forEach(function(id){ var m=MODS.find(function(x){return x.id===id;}); if(m&&lane&&m.name.indexOf(lane)===0) same++; });
-      same=Math.min(3,same); st.resonance=same;
-      (sk.mods||[]).forEach(function(id){
-        if(id==='m_backwater') st.backwater=1;
-        if(id==='m_dawn') st.dawn=1;
-        if(id==='m_fewskill') st.fewskill=1;
-        if(id==='m_latewave') st.latewave=1;
-        if(id==='m_bosswave') st.bosswave=1;
-        if(id==='m_summoner') st.summoner=1;
-      });
-      if(same) st.dmg*=(1+same*0.08);
-    }
-    const has=(id)=>sk.mods.indexOf(id)>=0;
-    if(has('m_crit2')) st.crit=(st.crit||0)+0.10;
-    if(has('m_dmg20')) st.dmg=(st.dmg||0)*1.2;
-    if(has('m_cd8')) st.cd=(st.cd||0)*0.92;
-    if(has('m_elem')) st.elemBonus=(st.elemBonus||0)+0.25;
-    if(has('m_heal2')) st.healBonus=(st.healBonus||0)+0.30;
-    if(has('m_critdmg')) st.critMult=(st.critMult||2.5)+0.4;
-    return st;
-  };
-  renderSkills();
-})();
-
-function wdLoad(){try{return JSON.parse(localStorage.getItem('wd_save_v1')||'{}')}catch(e){return {}}}
-function wdSave(o){try{localStorage.setItem('wd_save_v1',JSON.stringify(o))}catch(e){}}
-function wdRecord(){const s=wdLoad(); s.best=Math.max(s.best||0,S.wave||0); s.muted=!!SFXMuted; s.ts=Date.now(); wdSave(s);}
-function wdBestLine(){const s=wdLoad(); return s.best?('<p>最远到第 '+s.best+' 波。</p>'):'';}
-
-try{const _s=wdLoad(); if(_s.muted){SFXMuted=true; var _sb=document.getElementById('soundBtn'); if(_sb) _sb.textContent='静音';}}catch(e){}
-</script>
-
-<div id="rankModal" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(24,20,14,.55);align-items:center;justify-content:center">
-  <div style="width:min(92vw,420px);max-height:76vh;overflow:auto;background:#fbf6ea;border:1px solid #c9b791;border-radius:10px;padding:16px 18px;color:#2b241c;font:14px/1.6 'Microsoft YaHei',sans-serif">
-    <div style="display:flex;align-items:center;margin-bottom:10px"><b style="font-family:KaiTi,serif;font-size:20px;letter-spacing:2px">排行榜</b><span id="rankClose" style="margin-left:auto;cursor:pointer;color:#8a6a2f">关闭</span></div>
-    <div id="rankBody" style="font-size:13px;color:#4a3d2f">读取中…</div>
-  </div>
-</div>
-<script>
-(function(){
-  function uname(){try{var u=JSON.parse(localStorage.getItem('wd_user')||'null');return (u&&(u.name||u.nickname||u.preferred_username||u.username))||'无名鲸';}catch(e){return '无名鲸';}}
-  window.wdSubmitGameOver=function(wave){
-    if(!wave||wave<1) return;
-    try{fetch('/api/scores',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:uname(),wave:wave})}).catch(function(){});}catch(e){}
-  };
-  var modal=document.getElementById('rankModal'), body=document.getElementById('rankBody');
-  function esc(v){return String(v).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
-  function render(top){
-    if(!top||!top.length){body.innerHTML='还没有记录，先打一局。';return;}
-    var h='<table style="width:100%;border-collapse:collapse"><tr style="color:#8a6a2f"><td>#</td><td>名字</td><td style="text-align:right">波数</td></tr>';
-    top.forEach(function(r,i){h+='<tr style="border-top:1px solid #e6dcc4"><td style="padding:4px 0">'+(i+1)+'</td><td>'+esc(r.name)+'</td><td style="text-align:right">'+r.wave+'</td></tr>';});
-    body.innerHTML=h+'</table>';
-  }
-  function open(){
-    modal.style.display='flex'; body.textContent='读取中…';
-    fetch('/api/scores').then(function(r){return r.json();}).then(function(j){render(j&&j.top);}).catch(function(){body.textContent='连不上排行榜，可能还没部署函数。';});
-  }
-  document.getElementById('rankBtn').onclick=open;
-  document.getElementById('rankClose').onclick=function(){modal.style.display='none';};
-  modal.onclick=function(e){if(e.target===modal)modal.style.display='none';};
-  window.wdOpenRank=open;
+  obs.observe(panel,{childList:true,subtree:true});
 })();
 </script>
-</body>
-</html>
+</body>
+</html>
