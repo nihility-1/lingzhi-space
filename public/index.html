@@ -616,6 +616,7 @@ let last=performance.now();
 function loop(now){
   const dt=Math.min(0.05,(now-last)/1000); last=now;
   if(S.running && !S.drafting && !S.over) step(dt);
+  if(S.running && !S.over && S.hp<=0){ S.hp=0; gameOver(); }
   draw();
   requestAnimationFrame(loop);
 }
@@ -775,6 +776,7 @@ function draw(){
   ctx.restore();
   for(const sm of S.summons){ ctx.save();ctx.fillStyle=sm.color||'#b07a45';ctx.strokeStyle='#1b1b1b';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sm.x,sm.y,sm.r,0,7);ctx.fill();ctx.stroke();ctx.restore(); }
   for(const e of S.enemies){
+    if(e.dead || e.hp<=0) continue;
     ctx.save();
     ctx.fillStyle=e.hit>0?'#fff':(INKCOL[e.type]||'#9a8f7a');
     ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,7);ctx.fill();
