@@ -199,7 +199,7 @@ html,body{margin:0;height:100%;background:#efe9dc;color:#2b241c;font-family:"Mic
     <div class="bar qi"><i id="qiBar"></i></div>
 
 
-    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="modeBtn">玩法</span><span id="authBtn">登录</span><span id="rankBtn">排行</span></div>
+    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="modeBtn">玩法</span><span id="authBtn" style="display:none">登录</span><span id="rankBtn" style="display:none">排行</span></div>
 
 
   </div>
@@ -2650,7 +2650,7 @@ function gameOver(){
   SFX.over();
 
 
-  S.running=false;S.over=true; wdRecord(); try{window.wdSubmitGameOver&&window.wdSubmitGameOver(S.wave);}catch(e){} S.paused=true;S.drafting=false;S.enemies=[];S.bolts=[];
+  S.running=false;S.over=true; wdRecord();  S.paused=true;S.drafting=false;S.enemies=[];S.bolts=[];
 
 
   overlay.style.display='flex';
@@ -3282,7 +3282,7 @@ try{const _s=wdLoad(); if(_s.muted){SFXMuted=true; var _sb=document.getElementBy
   function uname(){try{var u=JSON.parse(localStorage.getItem('wd_user')||'null');return (u&&(u.name||u.nickname||u.preferred_username||u.username))||'无名鲸';}catch(e){return '无名鲸';}}
 
 
-  window.wdSubmitGameOver=function(wave){
+  window.wdSubmitGameOver=function(wave){ return; // 榜单已关
 
 
     if(!wave||wave<1) return;
