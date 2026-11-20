@@ -1354,7 +1354,7 @@ function recalc(sk){
 
 
 const MODE_KEY='wd_modes';
-const MODE=Object.assign({bloodmoon:true,forge:true,curse:true},(()=>{try{return JSON.parse(localStorage.getItem(MODE_KEY)||'{}')}catch(e){return{}}})());
+const MODE=Object.assign({bloodmoon:false,forge:false,curse:false},(()=>{try{return JSON.parse(localStorage.getItem(MODE_KEY)||'{}')}catch(e){return{}}})());
 function saveMode(){try{localStorage.setItem(MODE_KEY,JSON.stringify(MODE))}catch(e){}}
 function openModes(){
   const was=S.paused; S.paused=true;
