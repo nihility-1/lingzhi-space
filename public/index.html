@@ -2122,7 +2122,10 @@ function openStats(){
   overlay.style.display='flex';
 
 
-  panel.querySelector('#closeStats').onclick=()=>{ overlay.style.display='none'; S.paused=false; };
+  const closeStats=()=>{ overlay.style.display='none'; S.paused=false; const bc=document.getElementById('statClose'); if(bc) bc.style.display='none'; };
+let bc=document.getElementById('statClose'); if(!bc){ bc=document.createElement('button'); bc.id='statClose'; bc.type='button'; bc.innerHTML='&times;'; document.body.appendChild(bc);} bc.style.display='flex';
+bc.onclick=closeStats; overlay.onclick=(e)=>{ if(e.target===overlay) closeStats(); };
+panel.querySelector('#closeStats').onclick=closeStats;
 
 
 }
