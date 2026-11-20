@@ -484,7 +484,7 @@ function kill(e){
 function damage(e,amt,crit){
   if(e.dead) return;
   if(e.affix==='suoyu') amt*=0.82;
-  e.hp-=amt; e.hit=0.12; S.stats.dmg+=amt; SFX.hit(); if(crit) S.shake=Math.max(S.shake,3);
+  e.hp-=amt; if(!isFinite(e.hp)) e.hp=0; e.hit=0.12; S.stats.dmg+=amt; SFX.hit(); if(crit) S.shake=Math.max(S.shake,3);
   S.texts.push({x:e.x,y:e.y-e.r-6,v:Math.round(amt),t:0.7,crit:!!crit});
   if(e.hp<=0) kill(e);
 }
@@ -672,6 +672,7 @@ function step(dt){
   S.bolts=S.bolts.filter(b=>b.life>0);
   S.enemies=S.enemies.filter(e=>!e.dead);
   if(S.shield>0) S.shield=Math.max(0,S.shield-6*dt);
+  for(const e of S.enemies){ if(!e.dead && (!isFinite(e.hp) || e.hp<=0.5)) kill(e); }
   if(S.hp<=0){ S.hp=0; gameOver(); }
   if(S.over) return;
   if(!S.enemies.length && !S.drafting) waveClear();
