@@ -199,7 +199,7 @@ html,body{margin:0;height:100%;background:#efe9dc;color:#2b241c;font-family:"Mic
     <div class="bar qi"><i id="qiBar"></i></div>
 
 
-    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="authBtn">登录</span><span id="rankBtn">排行</span></div>
+    <div class="row"><span>HP <b id="hpTxt">100</b></span><span id="shieldTxt"></span><span id="soundBtn">音效</span><span id="domainBtn" class="off">领域</span><span id="restartBtn">重开</span><span id="statBtn">数据</span><span id="modeBtn">玩法</span><span id="authBtn">登录</span><span id="rankBtn">排行</span></div>
 
 
   </div>
@@ -242,6 +242,7 @@ const hintEl=document.getElementById('hint');
 
 
 document.getElementById('statBtn').onclick=openStats;
+document.getElementById('modeBtn').onclick=openModes;
 
 
 document.getElementById('soundBtn').onclick=()=>{ SFXMuted=!SFXMuted; document.getElementById('soundBtn').textContent=SFXMuted?'静音':'音效'; if(!SFXMuted) actx(); };
@@ -1351,6 +1352,33 @@ function recalc(sk){
 
 
 
+
+const MODE_KEY='wd_modes';
+const MODE=Object.assign({bloodmoon:true,forge:true,curse:true},(()=>{try{return JSON.parse(localStorage.getItem(MODE_KEY)||'{}')}catch(e){return{}}})());
+function saveMode(){try{localStorage.setItem(MODE_KEY,JSON.stringify(MODE))}catch(e){}}
+function openModes(){
+  const was=S.paused; S.paused=true;
+  const rows=[['bloodmoon','血月波','每 7 波怪变强，打完多给一条词条'],['forge','词条熔铸','同名词条叠到第 3 张时多叠一层'],['curse','诅咒契约','每 5 波可选：挨一个诅咒，换两条词条']];
+  let h='<h1>玩法</h1><p>勾选随时改，下一波生效。</p>';
+  rows.forEach(r=>{ h+='<label style="display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:14px;line-height:1.5"><input type="checkbox" data-k="'+r[0]+'" '+(MODE[r[0]]?'checked':'')+' style="margin-top:4px;width:18px;height:18px"><span><b>'+r[1]+'</b><br><span style="color:#7a6a56;font-size:12px">'+r[2]+'</span></span></label>'; });
+  h+='<button class="btn" id="closeModes">关掉</button>';
+  panel.innerHTML=h; overlay.style.display='flex';
+  panel.querySelectorAll('input[data-k]').forEach(el=>{ el.onchange=()=>{ MODE[el.dataset.k]=el.checked; saveMode(); hud((el.checked?'开了':'关了')+' 一项玩法'); }; });
+  panel.querySelector('#closeModes').onclick=()=>{ overlay.style.display='none'; S.paused=was; };
+}
+function curseOffer(){
+  const c=[['心脉受损','HP 上限 -10%'],['灵台震颤','下一波敌人 +10% 血'],['经脉滞涩','下一波敌人 +10% 攻']][Math.floor(Math.random()*3)];
+  panel.innerHTML='<h1>诅咒契约</h1><p>第 '+S.wave+' 波打过，门开了一条缝。</p><p style="color:#c9603c">'+c[0]+'：'+c[1]+'</p><p>受下它，立刻多两条词条。</p>'
+   +'<button class="btn" id="acceptC" style="background:#c9603c;color:#fff">受下</button><button class="btn" id="refuseC" style="background:#e9dfc9;color:#2b241c;border:1px solid #d8cbb2">不要</button>';
+  overlay.style.display='flex';
+  panel.querySelector('#acceptC').onclick=()=>{
+    if(c[0]==='心脉受损'){ S.maxhp=Math.max(40,Math.round(S.maxhp*0.9)); S.hp=Math.min(S.hp,S.maxhp); }
+    if(c[0]==='灵台震颤') S.curseHp=1.10;
+    if(c[0]==='经脉滞涩') S.curseDmg=1.10;
+    S.draftsLeft+=2; overlay.style.display='none'; draft();
+  };
+  panel.querySelector('#refuseC').onclick=()=>{ overlay.style.display='none'; draft(); };
+}
 function groupTags(arr){const c={};for(const s of arr)c[s]=(c[s]||0)+1;return Object.keys(c).map(k=>c[k]>1?k+'\u00d7'+c[k]:k).join(' ');}
 
 function renderSkills(){
@@ -1420,6 +1448,7 @@ function onSkillClick(i){
 
 
   S.skills[i].mods.push(mod);
+  if(MODE.forge){ const same=S.skills[i].mods.filter(x=>x.id===mod.id).length; if(same>=3){ S.skills[i].mods.push(mod); hud('熔铸：'+mod.name+' 叠到 '+same+' 层'); } }
 
 
   if(mod.id==='hp30'){ S.maxhp+=30; S.hp+=30; }
@@ -1831,6 +1860,8 @@ function spawnWave(){
 
 
   const hpScale=Math.pow(SCALE.hp,S.wave-1)*Math.pow(1.06,over);
+  const bm=(MODE.bloodmoon && S.wave%7===0); S.bloodMoon=bm;
+  const bmHp=(bm?1.35:1)*(S.curseHp||1), bmDmg=(bm?1.25:1)*(S.curseDmg||1); S.curseHp=1; S.curseDmg=1;
 
 
   let i=0;
@@ -1848,10 +1879,10 @@ function spawnWave(){
       S.enemies.push({type:g.t,elem:FIVE[Math.floor(Math.random()*5)],x:cvs.clientWidth*0.72+(i%4)*46+rnd(-5,5),y:rnd(55,Math.max(90,cvs.clientHeight-55)),
 
 
-        hp:t.hp*hpScale*1.05,maxhp:t.hp*hpScale*1.05,sp:t.sp*(1+Math.min(0.5,SCALE.spd*(S.wave-1))),r:t.r,
+        hp:t.hp*hpScale*bmHp*1.05,maxhp:t.hp*hpScale*bmHp*1.05,sp:t.sp*(1+Math.min(0.5,SCALE.spd*(S.wave-1))),r:t.r,
 
 
-        dmg:t.dmg*1.05*(1+SCALE.dmg*(S.wave-1))*(1+0.03*over),
+        dmg:t.dmg*bmDmg*1.05*(1+SCALE.dmg*(S.wave-1))*(1+0.03*over),
 
 
         burn:0,burnT:0,poi:0,poiT:0,slowT:0,slowF:0,hit:0,stunT:0,affix:null,affixT:1.2});
@@ -2527,23 +2558,14 @@ function draw(){
 
 
 function waveClear(){
-
-
   SFX.wave();
-
-
   if(S.drafting) return;
-
-
   let heal=0; for(const sk of S.skills) heal+=sk.stats.healWave;
-
-
   if(heal) S.hp=Math.min(S.maxhp,S.hp+heal);
-
-
-  S.running=false; S.drafting=true; S.draftsLeft=1; draft();
-
-
+  S.running=false; S.drafting=true;
+  S.draftsLeft=1+(S.bloodMoon?1:0); S.bloodMoon=false;
+  if(MODE.curse && S.wave%5===0){ curseOffer(); return; }
+  draft();
 }
 
 
