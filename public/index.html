@@ -170,8 +170,11 @@ html,body{margin:0;height:100%;background:#efe9dc;color:#2b241c;font-family:"Mic
 
 
 
+
 #statClose{position:fixed;right:14px;top:calc(14px + env(safe-area-inset-top,0px));z-index:12;width:46px;height:46px;border-radius:50%;background:#fbf6ea;border:1px solid #cdbb95;color:#2b241c;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(70,52,28,.28)}
+
 @media (max-height:760px){.panel{max-height:calc(100dvh - 96px)}}
+
 </style>
 
 
@@ -346,6 +349,12 @@ const BASE=[
  {id:'rift',name:'空间·裂',elem:'空间',lane:'空间',dmg:34,cd:3.6,color:'#8878ad',kind:'single',onHit:[{k:'weak',f:0.8,dur:2.5}],note:'撕开一道裂隙，单体重击'},
 
 
+ ,{id:'skycut',name:'金\u00b7\u88c2\u7a7a',elem:'\u91d1',lane:'\u5fa1\u7075',dmg:26,cd:1.7,color:'#b9a25e',kind:'single',execute:true,note:'\u65a9\u5411\u6700\u8106\u5904\uff0c\u8840\u5c11\u7ffb\u500d'}
+ ,{id:'firestorm',name:'火\u00b7\u711a\u5929',elem:'\u706b',lane:'\u5fa1\u7075',dmg:22,cd:2.6,color:'#c9603c',kind:'aoe',splashF:0.6,onHit:[{k:'burn',dps:4,dur:3}],note:'\u4e00\u7247\u706b\u96e8\uff0c\u843d\u5730\u5c31\u70e7'}
+ ,{id:'tidecall',name:'水\u00b7\u6f6e\u751f',elem:'\u6c34',lane:'\u5fa1\u7075',dmg:16,cd:3.0,color:'#5f93a6',kind:'aoe',onHit:[{k:'slow',f:0.45,dur:3}],note:'\u6f6e\u6c34\u6f2b\u8fc7\uff0c\u51bb\u4f4f\u811a'}
+ ,{id:'mountain',name:'土\u00b7\u9547\u5cb3',elem:'\u571f',lane:'\u5fa1\u7075',dmg:20,cd:4.0,color:'#a2873f',kind:'aoe',onHit:[{k:'stun',dur:1.2}],note:'\u843d\u77f3\u538b\u9876\uff0c\u5b9a\u4f4f\u4e00\u7247'}
+ ,{id:'thorn',name:'木\u00b7\u7f20\u679d',elem:'\u6728',lane:'\u5fa1\u7075',dmg:12,cd:2.2,color:'#5f8f5a',kind:'single',onHit:[{k:'poison',dps:5,dur:5}],note:'\u85e4\u7f20\u4e0a\uff0c\u6bd2\u5f80\u9aa8\u91cc\u94bb'}
+ ,{id:'ghost',name:'造物\u00b7\u5f71',elem:'\u65e0',lane:'\u9020\u7269',dmg:11,cd:3.6,color:'#6c6c8a',kind:'summon',note:'\u753b\u4e00\u9053\u5f71\uff0c\u66ff\u4f60\u54ac\u516d\u79d2'}
 ];
 
 
@@ -586,6 +595,32 @@ const MODS=[
  ,{id:'healup',name:'心灵·润',desc:'回血量 +50%',tag:'回血+50%'}
 
 
+ ,{id:'hunt',name:'御灵·狂',desc:'伤害 +25%',tag:'伤害+25%'}
+ ,{id:'etch',name:'御灵·蚀',desc:'伤害 +15%，冷却 -8%',tag:'伤害+15% 冷却-8%'}
+ ,{id:'forge',name:'御灵·炼',desc:'每装一条词条再多 +4%',tag:'词条+4%'}
+ ,{id:'sharp',name:'锋锐·叠',desc:'目标 +1，伤害 +10%',tag:'目标+1 伤害+10%'}
+ ,{id:'haste',name:'灵息·疾',desc:'冷却 -10%，暴击 +8%',tag:'冷却-10% 暴击+8%'}
+ ,{id:'soulbind',name:'定魂',desc:'控制 +0.5 秒，打减速目标 +20%',tag:'控制+0.5 趁滞+20%'}
+ ,{id:'breaker',name:'破军',desc:'对首领 +30%，对满血 +30%',tag:'首领+30% 满血+30%'}
+ ,{id:'drain',name:'吸灵',desc:'吸血 +15%，击杀回血 +5',tag:'吸血+15% 击杀回5'}
+ ,{id:'aegis',name:'盾灵',desc:'命中给盾 +3，每波盾 +4',tag:'命中盾+3 每波盾+4'}
+ ,{id:'renew',name:'回生',desc:'每波回血 +15，治疗 +20%',tag:'每波回15 治疗+20%'}
+ ,{id:'frost',name:'冰魄',desc:'冰封概率 +15%，控制 +0.4 秒',tag:'冰封+15% 控制+0.4'}
+ ,{id:'blaze',name:'燎野',desc:'溅射 +20%，灼烧会扩散',tag:'溅射+20% 烧扩散'}
+ ,{id:'starfall',name:'连星',desc:'目标 +1，连击 60%',tag:'目标+1 连击'}
+ ,{id:'quakep',name:'五灵·震',desc:'全属性 +15%',tag:'全属性+15%'}
+ ,{id:'wood2',name:'木灵·盛',desc:'木系 +40%',tag:'木+40%'}
+ ,{id:'fire2',name:'火灵·炽',desc:'火系 +40%',tag:'火+40%'}
+ ,{id:'earth2',name:'土灵·厚',desc:'土系 +40%',tag:'土+40%'}
+ ,{id:'metal2',name:'金灵·利',desc:'金系 +40%',tag:'金+40%'}
+ ,{id:'water2',name:'水灵·深',desc:'水系 +40%',tag:'水+40%'}
+ ,{id:'voidgap',name:'空间·隙',desc:'减伤 +6%',tag:'减伤+6%'}
+ ,{id:'chainlink',name:'锁御·链',desc:'控制 +0.7 秒，目标 +1',tag:'控制+0.7 目标+1'}
+ ,{id:'beastpack',name:'造物·兽群',desc:'召唤 +2 只',tag:'召唤+2'}
+ ,{id:'beastsoul',name:'造物·兽魂',desc:'召唤伤害 +60%',tag:'召唤+60%'}
+ ,{id:'trace2',name:'生灵·痕',desc:'灵痕 +2 秒，标记增伤 +25%',tag:'灵痕+2s 标记+25%'}
+ ,{id:'purify',name:'心灵·净',desc:'治疗 +30%，每波回血 +8',tag:'治疗+30% 回血+8'}
+ ,{id:'crit2',name:'御灵·暴',desc:'暴击 +20%，爆伤 2.8 倍',tag:'暴击+20% 爆伤2.8'}
 ];
 
 
@@ -1266,6 +1301,34 @@ function recalc(sk){
 
       case 'elem_all': st.elemAll+=0.1;break;
 
+       case 'hunt': st.dmgBonus+=0.25;break;
+      case 'etch': st.dmgBonus+=0.15; st.cd*=0.92; break;
+      case 'forge': st.modBonus+=0.04; break;
+      case 'sharp': st.targets+=1; st.dmgBonus+=0.10; break;
+      case 'haste': st.cd*=0.9; st.crit+=0.08; break;
+      case 'soulbind': st.ctrlDur+=0.5; st.slowDmg+=0.2; break;
+      case 'breaker': st.bosslayer+=0.3; st.highhp+=0.3; break;
+      case 'drain': st.heal+=0.15; st.killHeal+=5; break;
+      case 'aegis': st.shieldOnHit=(st.shieldOnHit||0)+3; st.guardPerWave+=4; break;
+      case 'renew': st.healWave+=15; st.healBonus+=0.2; break;
+      case 'frost': st.freezeChance+=0.15; st.ctrlDur+=0.4; break;
+      case 'blaze': st.splashF=(st.splashF||0)+0.2; st.burnSpread=true; break;
+      case 'starfall': st.targets+=1; st.multihit=Math.max(st.multihit||0,0.6); break;
+      case 'quakep': st.elemAll+=0.15; break;
+      case 'wood2': st.elemBonus['\u6728']=(st.elemBonus['\u6728']||0)+0.4; break;
+      case 'fire2': st.elemBonus['\u706b']=(st.elemBonus['\u706b']||0)+0.4; break;
+      case 'earth2': st.elemBonus['\u571f']=(st.elemBonus['\u571f']||0)+0.4; break;
+      case 'metal2': st.elemBonus['\u91d1']=(st.elemBonus['\u91d1']||0)+0.4; break;
+      case 'water2': st.elemBonus['\u6c34']=(st.elemBonus['\u6c34']||0)+0.4; break;
+      case 'voidgap': st.dmgTaken+=0.06; break;
+      case 'chainlink': st.ctrlDur+=0.7; st.targets+=1; break;
+      case 'beastpack': st.summonCount+=2; break;
+      case 'beastsoul': st.summonDmg+=0.6; break;
+      case 'trace2': st.markDur+=2; st.markBonus+=0.25; break;
+      case 'purify': st.healBonus+=0.3; st.healWave+=8; break;
+      case 'crit2': st.crit+=0.2; st.critMult=2.8; break;
+
+
 
     }
 
@@ -1287,6 +1350,8 @@ function recalc(sk){
 
 
 
+
+function groupTags(arr){const c={};for(const s of arr)c[s]=(c[s]||0)+1;return Object.keys(c).map(k=>c[k]>1?k+'\u00d7'+c[k]:k).join(' ');}
 
 function renderSkills(){
 
@@ -1312,7 +1377,7 @@ function renderSkills(){
       el.innerHTML='<div class="nm" style="color:'+sk.base.color+'">'+sk.base.name+'</div>'+
 
 
-        '<div class="mo">'+(sk.mods.map(m=>m.tag).join(' ')||'无词条')+'</div>'+
+        '<div class="mo">'+(groupTags(sk.mods.map(m=>m.tag))||'无词条')+'</div>'+
 
 
         '<div class="cd" style="transform:scaleY('+pct+')"></div>';
@@ -2107,7 +2172,7 @@ function openStats(){
     h+='<b style="color:'+sk.base.color+'">'+sk.base.name+'</b>（'+sk.base.elem+'） · '+pick+' · 冷却 '+st.cd.toFixed(2)+'s';
 
 
-    h+='<br><span style="color:#7a6a56">词条：'+(sk.mods.map(m=>m.name).join('、')||'无')+'</span>';
+    h+='<br><span style="color:#7a6a56">词条：'+(groupTags(sk.mods.map(m=>m.name))||'无')+'</span>';
 
 
     h+='</div>';
@@ -2123,8 +2188,11 @@ function openStats(){
 
 
   const closeStats=()=>{ overlay.style.display='none'; S.paused=false; const bc=document.getElementById('statClose'); if(bc) bc.style.display='none'; };
+
 let bc=document.getElementById('statClose'); if(!bc){ bc=document.createElement('button'); bc.id='statClose'; bc.type='button'; bc.innerHTML='&times;'; document.body.appendChild(bc);} bc.style.display='flex';
+
 bc.onclick=closeStats; overlay.onclick=(e)=>{ if(e.target===overlay) closeStats(); };
+
 panel.querySelector('#closeStats').onclick=closeStats;
 
 
